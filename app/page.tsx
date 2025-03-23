@@ -18,7 +18,7 @@ export default function Home() {
   const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([])
   const [skillCategories, setSkillCategories] = useState<SkillCategory[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
   const [activeSection, setActiveSection] = useState("home")
   const isMobile = useMobile()
 
