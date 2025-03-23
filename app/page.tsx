@@ -10,12 +10,13 @@ import SkillsSection from "@/components/sections/skills-section"
 import CaseStudiesSection from "@/components/sections/case-studies-section"
 import ContactSection from "@/components/sections/contact-section"
 import { useMobile } from "@/hooks/use-mobile"
+import type { PortfolioItem, CaseStudy, SkillCategory } from "@/types"
 
 export default function Home() {
   // State for mock data fetching
-  const [portfolioItems, setPortfolioItems] = useState([])
-  const [caseStudies, setCaseStudies] = useState([])
-  const [skillCategories, setSkillCategories] = useState([])
+  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([])
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([])
+  const [skillCategories, setSkillCategories] = useState<SkillCategory[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [activeSection, setActiveSection] = useState("home")
