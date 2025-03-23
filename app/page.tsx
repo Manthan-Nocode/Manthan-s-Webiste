@@ -1,6 +1,7 @@
 "use client"
 
-import { useState, useEffect } from "react"
+// Reorganize imports to ensure React hooks are imported only once
+// Import non-React dependencies first
 import { api } from "@/services/api"
 import Navigation from "@/components/layout/navigation"
 import HeroSection from "@/components/sections/hero-section"
@@ -14,6 +15,9 @@ import type { PortfolioItem, CaseStudy, SkillCategory } from "@/types"
 import { Button } from "@/components/ui/button"
 import { ArrowRight } from "lucide-react"
 import Link from "next/link"
+
+// Import React hooks last, only once
+import { useState, useEffect } from "react"
 
 export default function Home() {
   // State for mock data fetching
@@ -349,4 +353,3 @@ export default function Home() {
     </main>
   )
 }
-
