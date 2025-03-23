@@ -112,7 +112,7 @@ export default function Home() {
         setSkillCategories(skillsData || [])
       } catch (err) {
         console.error("Fatal error in data fetching:", err)
-        setError(err.message || "An unexpected error occurred")
+        setError(err instanceof Error ? err.message : "An unexpected error occurred")
       } finally {
         setLoading(false)
       }
