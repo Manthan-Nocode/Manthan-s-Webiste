@@ -242,7 +242,18 @@ export default function HomePage() {
       <Navigation items={navigationItems} onContactClick={() => scrollToSection("contact")} />
 
       {/* Hero Section */}
-      <HeroSection onContactClick={() => scrollToSection("contact")} />
+      <HeroSection
+        title="Turning Strategy into Measurable Results"
+        subtitle="AI & No-Code Automation Expert"
+        features={[
+          { icon: "Zap", text: "Process Automation" },
+          { icon: "BarChart2", text: "Workflow Optimization" },
+          { icon: "Cpu", text: "No-Code Solutions" },
+        ]}
+        problemStatements={problemStatements}
+        onViewWorkClick={() => scrollToSection("portfolio")}
+        onContactClick={() => scrollToSection("contact")}
+      />
 
       {/* About Section */}
       <AboutSection />
