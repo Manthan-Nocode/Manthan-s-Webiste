@@ -19,11 +19,9 @@ const nextConfig = {
   swcMinify: true,
   // Optimize for Vercel deployment
   experimental: {
-    optimizeCss: true,
     scrollRestoration: true,
     webpackBuildWorker: true,
   },
 }
 
 export default nextConfig
-
