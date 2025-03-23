@@ -11,17 +11,15 @@ const nextConfig = {
   },
   images: {
     domains: ['ubocvxgvjvfrmvkhqaav.supabase.co'],
-    formats: ['image/avif', 'image/webp'],
-    // Enable image optimization for production
-    unoptimized: false,
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   // Enable SWC minification for faster builds
   swcMinify: true,
-  // Optimize for Vercel deployment
-  experimental: {
-    scrollRestoration: true,
-    webpackBuildWorker: true,
-  },
 }
 
 export default nextConfig

@@ -52,10 +52,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        {/* Force CSS reload by adding a version query parameter */}
+        <link rel="stylesheet" href="/_next/static/css/app/layout.css?v=1" />
+      </head>
       <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>
     </html>
   )
 }
-
