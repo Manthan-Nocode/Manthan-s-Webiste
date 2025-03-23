@@ -1,4 +1,4 @@
-import type { BlogPost, ContactFormData, PortfolioItem, CaseStudy, SkillCategory } from "@/types"
+import type { BlogPost, PortfolioItem, ContactFormData, CaseStudy, SkillCategory } from "@/types"
 import { portfolioItems, caseStudies, skillCategories } from "@/data"
 import { supabase } from "@/lib/supabase-client"
 
@@ -9,6 +9,7 @@ import { supabase } from "@/lib/supabase-client"
 export const api = {
   /**
    * Fetch all blog posts
+   * @returns Promise<BlogPost[]> Array of blog posts
    */
   async getBlogPosts(): Promise<BlogPost[]> {
     try {
@@ -19,25 +20,32 @@ export const api = {
         return []
       }
 
+      if (!data || !Array.isArray(data)) {
+        console.warn("No blog posts data returned from Supabase")
+        return []
+      }
+
       // Transform Supabase data to match our BlogPost type
-      return data.map((post) => ({
-        id: post.id,
-        title: post.title,
-        slug: post.slug,
-        date: post.date,
-        readTime: post.read_time,
-        excerpt: post.excerpt,
-        image: post.image,
-        isNew: post.is_new,
-        category: post.category,
-        author: post.author,
-        authorAvatar: post.author_avatar || undefined,
-        views: post.views,
-        likes: post.likes,
-        comments: post.comments,
-        tags: post.tags,
-        content: post.content || undefined,
-      }))
+      return data.map(
+        (post): BlogPost => ({
+          id: post.id,
+          title: post.title,
+          slug: post.slug,
+          date: post.date,
+          readTime: post.read_time,
+          excerpt: post.excerpt,
+          image: post.image,
+          isNew: post.is_new,
+          category: post.category,
+          author: post.author,
+          authorAvatar: post.author_avatar || undefined,
+          views: post.views,
+          likes: post.likes,
+          comments: post.comments,
+          tags: post.tags,
+          content: post.content || undefined,
+        }),
+      )
     } catch (error) {
       console.error("Error fetching blog posts:", error)
       return []
@@ -46,9 +54,16 @@ export const api = {
 
   /**
    * Fetch a single blog post by slug
+   * @param slug The unique slug of the blog post
+   * @returns Promise<BlogPost | null> The blog post or null if not found
    */
   async getBlogPostBySlug(slug: string): Promise<BlogPost | null> {
     try {
+      if (!slug) {
+        console.error("No slug provided to getBlogPostBySlug")
+        return null
+      }
+
       const { data, error } = await supabase.from("blog_posts").select("*").eq("slug", slug).single()
 
       if (error) {
@@ -84,9 +99,17 @@ export const api = {
 
   /**
    * Fetch related blog posts based on tags
+   * @param currentPostSlug The slug of the current post to exclude
+   * @param tags Array of tags to match against
+   * @param limit Maximum number of posts to return
+   * @returns Promise<BlogPost[]> Array of related blog posts
    */
   async getRelatedBlogPosts(currentPostSlug: string, tags: string[], limit = 3): Promise<BlogPost[]> {
     try {
+      if (!currentPostSlug || !tags || !Array.isArray(tags) || tags.length === 0) {
+        return []
+      }
+
       // This is a simplified approach - in a real app, you might want to use a more sophisticated
       // algorithm to find related posts based on tags, categories, etc.
       const { data, error } = await supabase
@@ -101,29 +124,38 @@ export const api = {
         return []
       }
 
+      if (!data || !Array.isArray(data)) {
+        return []
+      }
+
       // Filter posts that have at least one matching tag
       // This is done client-side since Supabase doesn't support array overlap operations directly
       const relatedPosts = data
-        .filter((post) => post.tags.some((tag) => tags.includes(tag)))
+        .filter((post) => {
+          // Add null check for post.tags and ensure it's an array
+          return post.tags && Array.isArray(post.tags) && post.tags.some((tag: string) => tags.includes(tag))
+        })
         .slice(0, limit)
-        .map((post) => ({
-          id: post.id,
-          title: post.title,
-          slug: post.slug,
-          date: post.date,
-          readTime: post.read_time,
-          excerpt: post.excerpt,
-          image: post.image,
-          isNew: post.is_new,
-          category: post.category,
-          author: post.author,
-          authorAvatar: post.author_avatar || undefined,
-          views: post.views,
-          likes: post.likes,
-          comments: post.comments,
-          tags: post.tags,
-          content: post.content || undefined,
-        }))
+        .map(
+          (post): BlogPost => ({
+            id: post.id,
+            title: post.title,
+            slug: post.slug,
+            date: post.date,
+            readTime: post.read_time,
+            excerpt: post.excerpt,
+            image: post.image,
+            isNew: post.is_new,
+            category: post.category,
+            author: post.author,
+            authorAvatar: post.author_avatar || undefined,
+            views: post.views,
+            likes: post.likes,
+            comments: post.comments,
+            tags: post.tags,
+            content: post.content || undefined,
+          }),
+        )
 
       return relatedPosts
     } catch (error) {
@@ -132,9 +164,12 @@ export const api = {
     }
   },
 
+  /**
+   * Fetch portfolio items
+   * @returns Promise<PortfolioItem[]> Array of portfolio items
+   */
   async getPortfolioItems(): Promise<PortfolioItem[]> {
     try {
-      // setLoading?.(true); // Removed setLoading as it's not defined in the original code
       const { data, error } = await supabase.from("portfolio_items").select("*").order("year", { ascending: false })
 
       if (error) {
@@ -142,27 +177,31 @@ export const api = {
         return portfolioItems // Fallback to mock data
       }
 
-      return data.map((item) => ({
-        id: item.id,
-        title: item.title,
-        description: item.description,
-        year: item.year,
-        image: item.image,
-        gradient: item.gradient,
-        tags: item.tags,
-        url: item.url || undefined,
-      }))
+      if (!data || !Array.isArray(data)) {
+        return portfolioItems // Fallback to mock data
+      }
+
+      return data.map(
+        (item): PortfolioItem => ({
+          id: item.id,
+          title: item.title,
+          description: item.description,
+          year: item.year,
+          image: item.image,
+          gradient: item.gradient,
+          tags: item.tags,
+          url: item.url || undefined,
+        }),
+      )
     } catch (error) {
       console.error("Error fetching portfolio items:", error)
       return portfolioItems // Fallback to mock data
     }
-    // finally { // Removed finally as setLoading is not defined in the original code
-    //   setLoading?.(false);
-    // }
   },
 
   /**
    * Fetch case studies
+   * @returns Promise<CaseStudy[]> Array of case studies
    */
   async getCaseStudies(): Promise<CaseStudy[]> {
     try {
@@ -174,11 +213,19 @@ export const api = {
         return caseStudies // Fallback to mock data
       }
 
+      if (!caseStudiesData || !Array.isArray(caseStudiesData)) {
+        return caseStudies // Fallback to mock data
+      }
+
       // Then get all results for all case studies
       const { data: resultsData, error: resultsError } = await supabase.from("case_study_results").select("*")
 
       if (resultsError) {
         console.error("Error fetching case study results:", resultsError)
+        return caseStudies // Fallback to mock data
+      }
+
+      if (!resultsData || !Array.isArray(resultsData)) {
         return caseStudies // Fallback to mock data
       }
 
@@ -211,15 +258,26 @@ export const api = {
 
   /**
    * Fetch a single case study by ID
+   * @param id The unique ID of the case study
+   * @returns Promise<CaseStudy | null> The case study or null if not found
    */
   async getCaseStudyById(id: string): Promise<CaseStudy | null> {
     try {
+      if (!id) {
+        console.error("No ID provided to getCaseStudyById")
+        return null
+      }
+
       // Get the case study
       const { data: study, error: studyError } = await supabase.from("case_studies").select("*").eq("id", id).single()
 
       if (studyError) {
         console.error(`Error fetching case study with id ${id}:`, studyError)
         return caseStudies.find((study) => study.id === id) || null // Fallback to mock data
+      }
+
+      if (!study) {
+        return caseStudies.find((s) => s.id === id) || null // Fallback to mock data
       }
 
       // Get the results for this case study
@@ -230,6 +288,10 @@ export const api = {
 
       if (resultsError) {
         console.error(`Error fetching results for case study with id ${id}:`, resultsError)
+        return caseStudies.find((s) => s.id === id) || null // Fallback to mock data
+      }
+
+      if (!resultsData || !Array.isArray(resultsData)) {
         return caseStudies.find((s) => s.id === id) || null // Fallback to mock data
       }
 
@@ -257,6 +319,7 @@ export const api = {
 
   /**
    * Fetch skill categories
+   * @returns Promise<SkillCategory[]> Array of skill categories
    */
   async getSkillCategories(): Promise<SkillCategory[]> {
     try {
@@ -268,11 +331,19 @@ export const api = {
         return skillCategories // Fallback to mock data
       }
 
+      if (!categoriesData || !Array.isArray(categoriesData)) {
+        return skillCategories // Fallback to mock data
+      }
+
       // Then get all skills
       const { data: skillsData, error: skillsError } = await supabase.from("skills").select("*")
 
       if (skillsError) {
         console.error("Error fetching skills:", skillsError)
+        return skillCategories // Fallback to mock data
+      }
+
+      if (!skillsData || !Array.isArray(skillsData)) {
         return skillCategories // Fallback to mock data
       }
 
@@ -303,9 +374,18 @@ export const api = {
 
   /**
    * Submit contact form
+   * @param formData The contact form data
+   * @returns Promise<{success: boolean; message: string}> Result of the submission
    */
   async submitContactForm(formData: ContactFormData): Promise<{ success: boolean; message: string }> {
     try {
+      if (!formData || !formData.email || !formData.name || !formData.message) {
+        return {
+          success: false,
+          message: "Please fill in all required fields.",
+        }
+      }
+
       const { error } = await supabase.from("contact_submissions").insert([
         {
           name: formData.name,
@@ -339,8 +419,10 @@ export const api = {
 
   /**
    * Join waitlist (for courses/videos)
+   * @param email The email address to add to the waitlist
+   * @returns Promise<{success: boolean; message: string}> Result of the submission
    */
-  async joinWaitlist(email: string): Promise<{ success: boolean; message: string }> {
+  async joinWaitlist(email: string): Promise<{ success: boolean; message: string; alreadyExists?: boolean }> {
     // Validate email
     if (!email || !email.includes("@")) {
       return {
@@ -369,6 +451,7 @@ export const api = {
         return {
           success: true,
           message: "You're already on our waitlist! We'll notify you when we launch.",
+          alreadyExists: true,
         }
       }
 
@@ -396,4 +479,3 @@ export const api = {
     }
   },
 }
-
