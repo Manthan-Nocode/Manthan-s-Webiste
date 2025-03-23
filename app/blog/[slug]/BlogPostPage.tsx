@@ -21,29 +21,17 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent } from "@/components/ui/card"
-import { api } from "@/services/api"
-import type { BlogPost, PortfolioItem, CaseStudy, SkillCategory } from "@/types"
+import type { BlogPost } from "@/types"
 import { toast } from "sonner"
 
-// Add TypeScript declaration for Google Analytics
-declare global {
-  interface Window {
-    gtag?: (...args: any[]) => void
-    va?: (...args: any[]) => void
-  }
-}
+import { supabase } from "@/lib/supabase-client"
 
-export default function BlogPostPage({ slug }: { slug: string }) {
+function BlogPostPage({ slug }: { slug: string }) {
   // State for blog data
   const [post, setPost] = useState<BlogPost | null>(null)
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-
-  // Add these state variables with proper type annotations
-  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([])
-  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([])
-  const [skillCategories, setSkillCategories] = useState<SkillCategory[]>([])
 
   // Social interaction states
   const [isLiked, setIsLiked] = useState(false)
@@ -55,37 +43,35 @@ export default function BlogPostPage({ slug }: { slug: string }) {
       try {
         setLoading(true)
         // Fetch the blog post
-        const blogPost = await api.getBlogPostBySlug(slug)
+        const { data: blogPost, error: postError } = await supabase
+          .from("blog_posts")
+          .select("*")
+          .eq("slug", slug)
+          .single()
 
-        if (!blogPost) {
+        if (postError || !blogPost) {
           setError("Blog post not found")
           return
         }
 
-        setPost(blogPost)
+        setPost(blogPost as BlogPost)
 
         // Fetch related posts
-        const related = await api.getRelatedBlogPosts(slug, blogPost.tags)
-        setRelatedPosts(related)
+        const { data: related, error: relatedError } = await supabase
+          .from("blog_posts")
+          .select("*")
+          .neq("slug", slug)
+          .in("tags", blogPost.tags)
+          .limit(3)
 
-        // Make sure these lines use the correct types
-        const portfolioData: PortfolioItem[] = []
-        const caseStudiesData: CaseStudy[] = []
-        const skillsData: SkillCategory[] = []
+        if (relatedError) {
+          console.error("Error fetching related posts:", relatedError)
+        }
 
-        setPortfolioItems(portfolioData || []) // portfolioData should be PortfolioItem[]
-        setCaseStudies(caseStudiesData || []) // caseStudiesData should be CaseStudy[]
-        setSkillCategories(skillsData || []) // skillsData should be SkillCategory[]
-
-        // Track content loaded event
-        window.gtag?.("event", "blog_content_loaded", {
-          blog_title: blogPost.title,
-          blog_category: blogPost.category,
-        })
+        setRelatedPosts(related as BlogPost[])
       } catch (err) {
         console.error("Error fetching blog post:", err)
-        const errorMessage = err instanceof Error ? err.message : "Error loading blog post"
-        setError(errorMessage)
+        setError((err as Error).message || "Error loading blog post")
       } finally {
         setLoading(false)
       }
@@ -99,35 +85,19 @@ export default function BlogPostPage({ slug }: { slug: string }) {
     if (typeof window !== "undefined") {
       navigator.clipboard.writeText(window.location.href)
       toast.success("Link copied to clipboard!")
-
-      // Track share event
-      window.gtag?.("event", "blog_share", {
-        method: "copy_link",
-        blog_title: post?.title,
-      })
     }
   }
 
   // Handle like and bookmark actions
   const handleLike = () => {
     setIsLiked(!isLiked)
-    // Track like event
-    window.gtag?.("event", "blog_interaction", {
-      action: isLiked ? "unlike" : "like",
-      blog_title: post?.title,
-    })
-
+    // In a real app, we would make an API call to update the like status
     toast.success(isLiked ? "Removed like" : "Added like")
   }
 
   const handleBookmark = () => {
     setIsBookmarked(!isBookmarked)
-    // Track bookmark event
-    window.gtag?.("event", "blog_interaction", {
-      action: isBookmarked ? "unbookmark" : "bookmark",
-      blog_title: post?.title,
-    })
-
+    // In a real app, we would make an API call to update the bookmark status
     toast.success(isBookmarked ? "Removed from bookmarks" : "Added to bookmarks")
   }
 
@@ -137,12 +107,7 @@ export default function BlogPostPage({ slug }: { slug: string }) {
     const formData = new FormData(e.currentTarget)
     const email = formData.get("email")
 
-    // Track newsletter signup
-    window.gtag?.("event", "newsletter_signup", {
-      source: "blog_post",
-      blog_title: post?.title,
-    })
-
+    // In a real app, we would make an API call to subscribe the user
     toast.success(`Subscribed with email: ${email}`)
     // Reset the form
     e.currentTarget.reset()
@@ -153,7 +118,7 @@ export default function BlogPostPage({ slug }: { slug: string }) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading article...</p>
         </div>
       </div>
@@ -178,39 +143,6 @@ export default function BlogPostPage({ slug }: { slug: string }) {
 
   return (
     <main className="flex min-h-screen flex-col items-center pt-24 pb-16">
-      {/* Structured data for blog post */}
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            "@context": "https://schema.org",
-            "@type": "BlogPosting",
-            headline: post.title,
-            description: post.excerpt,
-            image: post.image || "/images/blog-default.jpg",
-            author: {
-              "@type": "Person",
-              name: post.author,
-            },
-            publisher: {
-              "@type": "Organization",
-              name: "Manthan Tiwari",
-              logo: {
-                "@type": "ImageObject",
-                url: "/images/logo.png",
-              },
-            },
-            datePublished: post.date,
-            dateModified: post.date,
-            mainEntityOfPage: {
-              "@type": "WebPage",
-              "@id": `${process.env.NEXT_PUBLIC_SITE_URL || "https://your-domain.com"}/blog/${post.slug}`,
-            },
-            keywords: post.tags.join(", "),
-          }),
-        }}
-      />
-
       {/* Back navigation */}
       <div className="w-full max-w-4xl px-4 mb-6">
         <Link href="/learn" className="inline-flex items-center text-blue-600 hover:text-blue-700">
@@ -320,7 +252,6 @@ export default function BlogPostPage({ slug }: { slug: string }) {
               size="sm"
               className={`flex items-center gap-2 ${isLiked ? "bg-red-50 text-red-600 border-red-200" : ""}`}
               onClick={handleLike}
-              aria-label={isLiked ? "Unlike this article" : "Like this article"}
             >
               <Heart className={`h-4 w-4 ${isLiked ? "fill-current text-red-500" : ""}`} />
               <span>{isLiked ? "Liked" : "Like"}</span>
@@ -330,7 +261,6 @@ export default function BlogPostPage({ slug }: { slug: string }) {
               size="sm"
               className={`flex items-center gap-2 ${isBookmarked ? "bg-blue-50 text-blue-600 border-blue-200" : ""}`}
               onClick={handleBookmark}
-              aria-label={isBookmarked ? "Remove from bookmarks" : "Save to bookmarks"}
             >
               <Bookmark className={`h-4 w-4 ${isBookmarked ? "fill-current text-blue-500" : ""}`} />
               <span>{isBookmarked ? "Saved" : "Save"}</span>
@@ -340,58 +270,19 @@ export default function BlogPostPage({ slug }: { slug: string }) {
           <div className="flex items-center gap-3 mt-4 sm:mt-0">
             <span className="text-sm text-gray-500">Share:</span>
             <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 rounded-full"
-                aria-label="Share on Twitter"
-                onClick={() => {
-                  window.gtag?.("event", "blog_share", {
-                    method: "twitter",
-                    blog_title: post.title,
-                  })
-                }}
-              >
+              <Button variant="outline" size="icon" className="h-8 w-8 rounded-full">
                 <Twitter className="h-4 w-4 text-[#1DA1F2]" />
                 <span className="sr-only">Share on Twitter</span>
               </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 rounded-full"
-                aria-label="Share on LinkedIn"
-                onClick={() => {
-                  window.gtag?.("event", "blog_share", {
-                    method: "linkedin",
-                    blog_title: post.title,
-                  })
-                }}
-              >
+              <Button variant="outline" size="icon" className="h-8 w-8 rounded-full">
                 <Linkedin className="h-4 w-4 text-[#0077B5]" />
                 <span className="sr-only">Share on LinkedIn</span>
               </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 rounded-full"
-                aria-label="Share on Facebook"
-                onClick={() => {
-                  window.gtag?.("event", "blog_share", {
-                    method: "facebook",
-                    blog_title: post.title,
-                  })
-                }}
-              >
+              <Button variant="outline" size="icon" className="h-8 w-8 rounded-full">
                 <Facebook className="h-4 w-4 text-[#1877F2]" />
                 <span className="sr-only">Share on Facebook</span>
               </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                className="h-8 w-8 rounded-full"
-                onClick={copyLinkToClipboard}
-                aria-label="Copy link to clipboard"
-              >
+              <Button variant="outline" size="icon" className="h-8 w-8 rounded-full" onClick={copyLinkToClipboard}>
                 <Copy className="h-4 w-4" />
                 <span className="sr-only">Copy link</span>
               </Button>
@@ -414,27 +305,10 @@ export default function BlogPostPage({ slug }: { slug: string }) {
                 AI integration, they've helped dozens of companies achieve significant operational improvements.
               </p>
               <div className="flex gap-3">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  className="text-blue-600 border-blue-200"
-                  onClick={() => {
-                    window.gtag?.("event", "author_profile_view", {
-                      author_name: post.author,
-                    })
-                  }}
-                >
+                <Button variant="outline" size="sm" className="text-blue-600 border-blue-200">
                   View Profile
                 </Button>
-                <Button
-                  size="sm"
-                  className="bg-blue-600 hover:bg-blue-700"
-                  onClick={() => {
-                    window.gtag?.("event", "author_follow", {
-                      author_name: post.author,
-                    })
-                  }}
-                >
+                <Button size="sm" className="bg-blue-600 hover:bg-blue-700">
                   Follow
                 </Button>
               </div>
@@ -466,15 +340,7 @@ export default function BlogPostPage({ slug }: { slug: string }) {
                   <CardContent className="p-4">
                     <h3 className="font-semibold text-gray-800 mb-2 line-clamp-2">{related.title}</h3>
                     <p className="text-sm text-gray-600 line-clamp-2 mb-3">{related.excerpt}</p>
-                    <Link
-                      href={`/blog/${related.slug}`}
-                      onClick={() => {
-                        window.gtag?.("event", "related_post_click", {
-                          current_post: post.title,
-                          clicked_post: related.title,
-                        })
-                      }}
-                    >
+                    <Link href={`/blog/${related.slug}`}>
                       <Button variant="link" className="px-0 text-blue-600 hover:text-blue-700">
                         Read Article
                       </Button>
@@ -490,20 +356,10 @@ export default function BlogPostPage({ slug }: { slug: string }) {
         <div>
           <h2 className="text-2xl font-bold mb-6">Comments</h2>
           <div className="bg-gray-50 rounded-lg p-8 text-center">
-            <MessageSquare className="h-12 w-12 mx-auto text-gray-400 mb-3" aria-hidden="true" />
+            <MessageSquare className="h-12 w-12 mx-auto text-gray-400 mb-3" />
             <h3 className="text-xl font-semibold mb-2">Join the conversation</h3>
             <p className="text-gray-600 mb-4">Sign in to comment on this article and engage with other readers.</p>
-            <Button
-              className="bg-blue-600 hover:bg-blue-700"
-              onClick={() => {
-                window.gtag?.("event", "comment_section_interaction", {
-                  action: "sign_in_click",
-                  blog_title: post.title,
-                })
-              }}
-            >
-              Sign In to Comment
-            </Button>
+            <Button className="bg-blue-600 hover:bg-blue-700">Sign In to Comment</Button>
           </div>
         </div>
       </article>
@@ -524,13 +380,11 @@ export default function BlogPostPage({ slug }: { slug: string }) {
                   placeholder="Your email address"
                   className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 flex-grow"
                   required
-                  aria-label="Email address for newsletter"
                 />
                 <Button type="submit" className="bg-blue-600 hover:bg-blue-700">
                   Subscribe
                 </Button>
               </form>
-              <p className="text-xs text-gray-500 mt-2">We respect your privacy. Unsubscribe at any time.</p>
             </div>
             <div className="md:w-1/3 flex justify-center">
               <div className="bg-white p-4 rounded-full h-24 w-24 flex items-center justify-center shadow-md">
@@ -541,7 +395,6 @@ export default function BlogPostPage({ slug }: { slug: string }) {
                   fill="none"
                   xmlns="http://www.w3.org/2000/svg"
                   className="text-blue-500"
-                  aria-hidden="true"
                 >
                   <path
                     d="M22 6C22 7.65685 20.6569 9 19 9C17.3431 9 16 7.65685 16 6C16 4.34315 17.3431 3 19 3C20.6569 3 22 4.34315 22 6Z"
@@ -587,4 +440,6 @@ export default function BlogPostPage({ slug }: { slug: string }) {
     </main>
   )
 }
+
+export default BlogPostPage
 

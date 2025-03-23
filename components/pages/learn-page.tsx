@@ -2,6 +2,14 @@
 
 import type React from "react"
 
+// Add TypeScript declaration for Google Analytics
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void
+    va?: (...args: any[]) => void
+  }
+}
+
 import { useState, useEffect } from "react"
 import Image from "next/image"
 import Link from "next/link"
@@ -597,3 +605,4 @@ export default function LearnPage() {
     </main>
   )
 }
+

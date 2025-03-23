@@ -9,6 +9,17 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent } from "@/components/ui/card"
 import { supabase } from "@/lib/supabase-client"
+// Import zod at the top of the file
+import { z } from "zod"
+
+// Add a validation schema before the component
+const contactSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters").max(100, "Name is too long"),
+  email: z.string().email("Please enter a valid email address"),
+  company: z.string().optional(),
+  subject: z.string().min(3, "Subject must be at least 3 characters").max(100, "Subject is too long"),
+  message: z.string().min(10, "Message must be at least 10 characters").max(1000, "Message is too long"),
+})
 
 export default function ContactSection() {
   const [formData, setFormData] = useState({
@@ -30,14 +41,18 @@ export default function ContactSection() {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
+  // Update the handleSubmit function
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setSubmitStatus(null)
 
     try {
+      // Validate form data
+      const validatedData = contactSchema.parse(formData)
+
       // Submit to Supabase
-      const { error } = await supabase.from("contact_submissions").insert([formData])
+      const { error } = await supabase.from("contact_submissions").insert([validatedData])
 
       if (error) throw error
 
@@ -56,11 +71,20 @@ export default function ContactSection() {
         message: "",
       })
     } catch (error) {
-      console.error("Error submitting form:", error)
-      setSubmitStatus({
-        success: false,
-        message: "There was an error submitting your message. Please try again.",
-      })
+      if (error instanceof z.ZodError) {
+        // Handle validation errors
+        const errorMessages = error.errors.map((err) => `${err.path.join(".")}: ${err.message}`).join(", ")
+        setSubmitStatus({
+          success: false,
+          message: `Validation error: ${errorMessages}`,
+        })
+      } else {
+        console.error("Error submitting form:", error)
+        setSubmitStatus({
+          success: false,
+          message: "There was an error submitting your message. Please try again.",
+        })
+      }
     } finally {
       setIsSubmitting(false)
     }

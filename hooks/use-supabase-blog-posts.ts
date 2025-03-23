@@ -55,3 +55,4 @@ export function useSupabaseBlogPosts() {
 
   return { posts, loading, error }
 }
+

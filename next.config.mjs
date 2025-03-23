@@ -1,8 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true, // Use SWC minifier for better performance
   images: {
     domains: ['images.unsplash.com', 'via.placeholder.com'],
+    formats: ['image/avif', 'image/webp'], // Modern image formats
     remotePatterns: [
       {
         protocol: 'https',
@@ -31,6 +33,13 @@ const nextConfig = {
     
     return config;
   },
+  // Add production optimizations
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production' ? {
+      exclude: ['error', 'warn'],
+    } : false,
+  },
 }
 
 export default nextConfig;
+

@@ -106,3 +106,4 @@ export default function MobileNavigation({ items, onContactClick }: MobileNaviga
     </>
   )
 }
+

@@ -1,9 +1,11 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import MobileNavigation from "./mobile-navigation"
+// Import the useRouter hook at the top of the file
+import { useRouter } from "next/navigation"
+import { Menu, X } from "lucide-react"
 
 interface NavigationProps {
   items: Array<{
@@ -18,6 +20,9 @@ interface NavigationProps {
 export default function Navigation({ items, onContactClick }: NavigationProps) {
   const [activeSection, setActiveSection] = useState("home")
   const [scrolled, setScrolled] = useState(false)
+  // Add the router inside the component function
+  const router = useRouter()
+  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -53,6 +58,12 @@ export default function Navigation({ items, onContactClick }: NavigationProps) {
   }, [activeSection])
 
   const scrollToSection = (sectionId: string) => {
+    if (sectionId.startsWith("/")) {
+      // Use router for page navigation
+      router.push(sectionId)
+      return
+    }
+
     const section = document.getElementById(sectionId)
     if (section) {
       const navHeight = 80 // Height of the navigation bar
@@ -71,9 +82,7 @@ export default function Navigation({ items, onContactClick }: NavigationProps) {
       }`}
     >
       <div className="container mx-auto flex items-center justify-between">
-        <Link href="/" className="text-xl font-bold text-blue-600">
-          Manthan Tiwari
-        </Link>
+        <div></div>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6">
@@ -83,7 +92,9 @@ export default function Navigation({ items, onContactClick }: NavigationProps) {
               className={`text-sm font-medium transition-colors hover:text-blue-600 ${
                 activeSection === item.id ? "text-blue-600" : "text-gray-700"
               }`}
-              onClick={() => (item.isLink ? (window.location.href = item.href!) : scrollToSection(item.id))}
+              onClick={() => (item.isLink ? router.push(item.href!) : scrollToSection(item.id))}
+              aria-current={activeSection === item.id ? "page" : undefined}
+              role="menuitem"
             >
               {item.label}
             </button>
@@ -95,8 +106,27 @@ export default function Navigation({ items, onContactClick }: NavigationProps) {
         </nav>
 
         {/* Mobile Navigation */}
-        <MobileNavigation items={items} onContactClick={onContactClick} />
+        <Button
+          variant="ghost"
+          size="icon"
+          className="md:hidden mobile-menu-button"
+          onClick={() => setIsOpen(!isOpen)}
+          aria-label={isOpen ? "Close menu" : "Open menu"}
+          aria-expanded={isOpen}
+          aria-controls="mobile-navigation"
+        >
+          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+        </Button>
+        <div
+          id="mobile-navigation"
+          className={`mobile-nav ${isOpen ? "mobile-nav-open" : "mobile-nav-closed"} p-6`}
+          role="menu"
+          aria-hidden={!isOpen}
+        >
+          <MobileNavigation items={items} onContactClick={onContactClick} />
+        </div>
       </div>
     </header>
   )
 }
+

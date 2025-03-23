@@ -18,6 +18,8 @@ interface SkillsSectionProps {
   }
 }
 
+// This interface looks correct, no changes needed
+
 // Add defensive rendering to handle empty or undefined skillCategories
 
 // Update the component to correctly access the array within the object

@@ -14,6 +14,8 @@ export default function BlogSection() {
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
+    let isMounted = true
+
     async function fetchBlogPosts() {
       try {
         setLoading(true)
@@ -29,16 +31,28 @@ export default function BlogSection() {
           throw new Error(error.message)
         }
 
-        setPosts(data || [])
+        // Only update state if component is still mounted
+        if (isMounted) {
+          setPosts(data || [])
+        }
       } catch (err) {
         console.error("Error fetching blog posts:", err)
-        setError(err instanceof Error ? err.message : "Failed to load blog posts")
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : "Failed to load blog posts")
+        }
       } finally {
-        setLoading(false)
+        if (isMounted) {
+          setLoading(false)
+        }
       }
     }
 
     fetchBlogPosts()
+
+    // Cleanup function to prevent memory leaks
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   return (
@@ -113,3 +127,4 @@ export default function BlogSection() {
     </section>
   )
 }
+

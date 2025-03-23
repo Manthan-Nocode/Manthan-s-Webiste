@@ -48,6 +48,8 @@ export default function HomePage() {
 
   // Fetch data on component mount
   useEffect(() => {
+    let isMounted = true
+
     async function fetchData() {
       try {
         setLoading(true)
@@ -74,9 +76,12 @@ export default function HomePage() {
         try {
           portfolioData = await api.getPortfolioItems()
           if (!portfolioData || portfolioData.length === 0) {
+            console.info("No portfolio items returned from API, using fallback data")
             portfolioData = await loadFallbackPortfolio()
           }
         } catch (err) {
+          console.error("Error fetching portfolio items:", err)
+          console.info("Using fallback portfolio data")
           portfolioData = await loadFallbackPortfolio()
         }
 
@@ -84,9 +89,12 @@ export default function HomePage() {
         try {
           caseStudiesData = await api.getCaseStudies()
           if (!caseStudiesData || caseStudiesData.length === 0) {
+            console.info("No case studies returned from API, using fallback data")
             caseStudiesData = await loadFallbackCaseStudies()
           }
         } catch (err) {
+          console.error("Error fetching case studies:", err)
+          console.info("Using fallback case studies data")
           caseStudiesData = await loadFallbackCaseStudies()
         }
 
@@ -94,25 +102,39 @@ export default function HomePage() {
         try {
           skillsData = await api.getSkillCategories()
           if (!skillsData || skillsData.length === 0) {
+            console.info("No skill categories returned from API, using fallback data")
             skillsData = await loadFallbackSkills()
           }
         } catch (err) {
+          console.error("Error fetching skill categories:", err)
+          console.info("Using fallback skills data")
           skillsData = await loadFallbackSkills()
         }
 
-        // Update state with the data (API or fallback)
-        setPortfolioItems(portfolioData || [])
-        setCaseStudies(caseStudiesData || [])
-        setSkillCategories(skillsData || [])
+        // Only update state if component is still mounted
+        if (isMounted) {
+          setPortfolioItems(portfolioData || [])
+          setCaseStudies(caseStudiesData || [])
+          setSkillCategories(skillsData || [])
+        }
       } catch (err) {
         console.error("Fatal error in data fetching:", err)
-        setError(err instanceof Error ? err.message : "An unexpected error occurred")
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : "An unexpected error occurred")
+        }
       } finally {
-        setLoading(false)
+        if (isMounted) {
+          setLoading(false)
+        }
       }
     }
 
     fetchData()
+
+    // Cleanup function to prevent memory leaks
+    return () => {
+      isMounted = false
+    }
   }, [])
 
   useEffect(() => {
@@ -265,7 +287,31 @@ export default function HomePage() {
       />
 
       {/* Skills Section */}
-      <SkillsSection skillCategories={skillCategories} />
+      <SkillsSection
+        skillCategories={skillCategories}
+        skillCategoryIcons={{
+          technical: [
+            { name: "Development", icon: "Code" },
+            { name: "Automation", icon: "Zap" },
+            { name: "AI & LLM", icon: "Brain" },
+            { name: "SDLC", icon: "GitMerge" },
+          ],
+          soft: [
+            { name: "Leadership", icon: "Briefcase" },
+            { name: "Problem Solving", icon: "Brain" },
+            { name: "Communication", icon: "MessageSquare" },
+            { name: "Creativity", icon: "PenTool" },
+          ],
+        }}
+        softSkillCategoryIcons={{
+          soft: [
+            { name: "Leadership", icon: "Briefcase" },
+            { name: "Problem Solving", icon: "Brain" },
+            { name: "Communication", icon: "MessageSquare" },
+            { name: "Creativity", icon: "PenTool" },
+          ],
+        }}
+      />
 
       {/* Case Studies Section */}
       <CaseStudiesSection caseStudies={caseStudies} />
@@ -278,3 +324,4 @@ export default function HomePage() {
     </main>
   )
 }
+
