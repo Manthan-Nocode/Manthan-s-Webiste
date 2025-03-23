@@ -3,28 +3,32 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-
-interface NavigationItem {
-  id: string
-  label: string
-  isLink?: boolean
-  href?: string
-}
+import MobileNavigation from "./mobile-navigation"
 
 interface NavigationProps {
-  items: NavigationItem[]
+  items: Array<{
+    id: string
+    label: string
+    isLink?: boolean
+    href?: string
+  }>
   onContactClick: () => void
 }
 
-/**
- * Main navigation component
- * Handles scrolling to sections and active section highlighting
- */
 export default function Navigation({ items, onContactClick }: NavigationProps) {
   const [activeSection, setActiveSection] = useState("home")
+  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
+      // Update navbar style on scroll
+      if (window.scrollY > 50) {
+        setScrolled(true)
+      } else {
+        setScrolled(false)
+      }
+
+      // Update active section based on scroll position
       const sections = document.querySelectorAll("section")
       const scrollPosition = window.scrollY + 100 // Adjust offset for better detection
 
@@ -49,12 +53,6 @@ export default function Navigation({ items, onContactClick }: NavigationProps) {
   }, [activeSection])
 
   const scrollToSection = (sectionId: string) => {
-    // If it's the Learn link, navigate to the Coming Soon page
-    if (sectionId === "strategic-innovation") {
-      window.location.href = "/coming-soon"
-      return
-    }
-
     const section = document.getElementById(sectionId)
     if (section) {
       const navHeight = 80 // Height of the navigation bar
@@ -67,57 +65,38 @@ export default function Navigation({ items, onContactClick }: NavigationProps) {
   }
 
   return (
-    <nav className="fixed top-0 w-full bg-white z-50 shadow-sm">
-      <div className="container mx-auto flex items-center justify-end py-3 px-2 md:px-4">
-        <div className="flex items-center space-x-4 pr-1">
-          {items.map((item) => {
-            if (item.id === "strategic-innovation") {
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => (window.location.href = "/coming-soon")}
-                  className={`px-3 py-2 rounded-full transition-colors duration-200 text-gray-700 hover:bg-gray-50`}
-                >
-                  {item.label}
-                </button>
-              )
-            }
+    <header
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled ? "bg-white shadow-md py-2" : "bg-transparent py-4"
+      }`}
+    >
+      <div className="container mx-auto flex items-center justify-between">
+        <Link href="/" className="text-xl font-bold text-blue-600">
+          Manthan Tiwari
+        </Link>
 
-            if (item.isLink && item.href) {
-              return (
-                <Link
-                  key={item.id}
-                  href={item.href}
-                  className={`hidden md:block px-3 py-2 rounded-full transition-colors duration-200 ${
-                    activeSection === item.id
-                      ? "bg-blue-50 text-blue-600 font-medium"
-                      : "text-gray-700 hover:bg-gray-50"
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              )
-            }
+        {/* Desktop Navigation */}
+        <nav className="hidden md:flex items-center space-x-6">
+          {items.map((item) => (
+            <button
+              key={item.id}
+              className={`text-sm font-medium transition-colors hover:text-blue-600 ${
+                activeSection === item.id ? "text-blue-600" : "text-gray-700"
+              }`}
+              onClick={() => (item.isLink ? (window.location.href = item.href!) : scrollToSection(item.id))}
+            >
+              {item.label}
+            </button>
+          ))}
 
-            return (
-              <button
-                key={item.id}
-                onClick={() => scrollToSection(item.id)}
-                className={`px-3 py-2 rounded-full transition-colors duration-200 ${
-                  activeSection === item.id ? "bg-blue-50 text-blue-600 font-medium" : "text-gray-700 hover:bg-gray-50"
-                } ${item.id === "case-studies" ? "hidden md:block" : ""}`}
-              >
-                {item.label}
-              </button>
-            )
-          })}
-
-          <Button onClick={onContactClick} className="bg-blue-600 hover:bg-blue-700 ml-2">
-            Get in Touch
+          <Button onClick={onContactClick} className="bg-blue-600 hover:bg-blue-700 text-white">
+            Contact Me
           </Button>
-        </div>
+        </nav>
+
+        {/* Mobile Navigation */}
+        <MobileNavigation items={items} onContactClick={onContactClick} />
       </div>
-    </nav>
+    </header>
   )
 }
-

@@ -54,6 +54,53 @@
   body {
     @apply bg-background text-foreground;
   }
+  h1 {
+    @apply text-3xl font-bold md:text-4xl lg:text-5xl;
+  }
+  h2 {
+    @apply text-2xl font-bold md:text-3xl lg:text-4xl;
+  }
+  h3 {
+    @apply text-xl font-bold md:text-2xl;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors duration-200;
+  }
+
+  .btn-outline {
+    @apply border border-gray-300 hover:bg-gray-100 px-4 py-2 rounded-md transition-colors duration-200;
+  }
+
+  .card-hover {
+    @apply transition-all duration-300 hover:transform hover:scale-105 hover:shadow-md;
+  }
+
+  .gradient-bg {
+    @apply bg-gradient-to-r from-blue-50 to-indigo-50;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold mb-4 text-center;
+  }
+
+  .section-subtitle {
+    @apply text-center text-gray-600 max-w-3xl mx-auto mb-8;
+  }
+
+  .mobile-nav {
+    @apply fixed top-0 right-0 h-screen w-3/4 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out;
+  }
+
+  .mobile-nav-open {
+    @apply translate-x-0;
+  }
+
+  .mobile-nav-closed {
+    @apply translate-x-full;
+  }
 }
 
 /* Prose styles for blog content */
@@ -106,6 +153,32 @@
   }
 }
 
+/* Responsive utilities */
+@media (max-width: 640px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  h1 {
+    font-size: 1.875rem; /* 30px */
+  }
+
+  h2 {
+    font-size: 1.5rem; /* 24px */
+  }
+
+  h3 {
+    font-size: 1.25rem; /* 20px */
+  }
+
+  .section-padding {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+/* Text truncation utilities */
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -120,3 +193,14 @@
   overflow: hidden;
 }
 
+/* Fix for mobile touch events */
+@media (hover: none) {
+  .card-hover:hover {
+    transform: none;
+    box-shadow: none;
+  }
+
+  .hover\:bg-blue-700:hover {
+    background-color: inherit;
+  }
+}

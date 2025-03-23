@@ -3,6 +3,7 @@
 import { Button } from "@/components/ui/button"
 import { FlippingStatement } from "@/components/ui/flipping-statement"
 import { ArrowRight, Zap, BrainCircuit, Gauge } from "lucide-react"
+import { useMobile } from "@/hooks/use-mobile"
 import type { HeroFeature } from "@/types"
 
 type HeroSectionProps = {
@@ -25,11 +26,13 @@ export default function HeroSection({
   onViewWorkClick,
   onContactClick,
 }: HeroSectionProps) {
+  const isMobile = useMobile()
+
   // Standardized card hover animation class
   const cardHoverClass = "transition-all duration-300 hover:transform hover:scale-105 hover:shadow-md"
 
   return (
-    <section id="home" className="w-full pt-28 pb-12 px-4">
+    <section id="home" className="w-full pt-28 pb-12 px-4 animate-fade-in">
       <div className="container mx-auto text-center">
         <div className="inline-flex items-center justify-center px-3 py-1 mb-3 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 shadow-sm">
           <div className="w-2 h-2 rounded-full bg-gradient-to-r from-blue-500 to-indigo-500 mr-2"></div>
@@ -55,10 +58,10 @@ export default function HeroSection({
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mb-10">
-          <Button onClick={onViewWorkClick} className="bg-blue-600 hover:bg-blue-700 px-6">
+          <Button onClick={onViewWorkClick} className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 px-6">
             View My Work <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
-          <Button onClick={onContactClick} variant="outline" className="border-gray-300">
+          <Button onClick={onContactClick} variant="outline" className="w-full sm:w-auto border-gray-300">
             Contact Me
           </Button>
         </div>
@@ -89,4 +92,3 @@ export default function HeroSection({
     </section>
   )
 }
-

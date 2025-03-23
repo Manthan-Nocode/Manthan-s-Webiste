@@ -1,7 +1,7 @@
 import type React from "react"
 import { Inter } from "next/font/google"
 import "./globals.css"
-import { Providers } from "./providers" // Make sure this is the correct import
+import { Providers } from "./providers"
 
 const inter = Inter({ subsets: ["latin"] })
 
@@ -51,12 +51,21 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <head>
+        {/* Proper viewport meta tag for responsive design */}
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0" />
+        {/* Preload critical CSS */}
+        <link rel="preload" href="/globals.css" as="style" />
         {/* Force CSS reload by adding a version query parameter */}
-        <link rel="stylesheet" href="/_next/static/css/app/layout.css?v=1" />
+        <link rel="stylesheet" href="/globals.css?v=1.0.1" />
+        {/* Theme color for mobile browsers */}
+        <meta name="theme-color" content="#2563eb" />
+        {/* Apple mobile web app capable */}
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} antialiased`}>
         <Providers>{children}</Providers>
       </body>
     </html>
