@@ -233,7 +233,7 @@
   /* Mobile-specific fixes for case studies */
   .case-study-result {
     padding: 0.75rem !important;
-    margin-bottom: 0.5rem !important;
+    margin-bottom: 0.75rem !important; /* Increased from 0.5rem */
   }
 
   .case-study-icon {
@@ -244,6 +244,28 @@
   .case-study-title {
     font-size: 0.875rem !important;
     line-height: 1.25rem !important;
+  }
+
+  /* Add additional spacing between case study sections */
+  .space-y-3 > * {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Ensure proper text container height */
+  .case-study-result > div {
+    min-height: auto !important;
+  }
+
+  /* Add hero title spacing fix */
+  .hero-title span + span {
+    margin-left: 0.25em;
+  }
+
+  /* Fix for "into Measurable" spacing */
+  .hero-title .text-gray-800 + .text-blue-600,
+  .hero-title span.text-blue-600 {
+    display: inline-block;
+    margin-left: 0.25em;
   }
 }
 

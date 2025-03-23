@@ -128,7 +128,7 @@ export default function CaseStudiesSection({ caseStudies = [] }: CaseStudiesSect
                                 />
                               </svg>
                             </div>
-                            <div>
+                            <div className="case-study-text">
                               <p
                                 className="font-medium case-study-title"
                                 style={{ color: getResultTitleColor(result.color) }}
