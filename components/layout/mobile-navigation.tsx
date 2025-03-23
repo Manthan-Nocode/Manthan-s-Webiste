@@ -70,19 +70,32 @@ export default function MobileNavigation({ items, onContactClick }: MobileNaviga
         {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
       </Button>
 
-      <div className={`mobile-nav ${isOpen ? "mobile-nav-open" : "mobile-nav-closed"} p-6`}>
-        <div className="flex justify-end mb-6">
+      {/* Semi-transparent overlay */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+          onClick={() => setIsOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      <div
+        className={`mobile-nav fixed top-0 right-0 h-screen w-3/4 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out ${
+          isOpen ? "translate-x-0" : "translate-x-full"
+        } md:hidden`}
+      >
+        <div className="flex justify-end p-4 border-b border-gray-100">
           <Button variant="ghost" size="icon" onClick={() => setIsOpen(false)} aria-label="Close menu">
             <X className="h-6 w-6" />
           </Button>
         </div>
 
-        <nav className="flex flex-col space-y-4">
+        <nav className="flex flex-col p-4">
           {items.map((item) => (
             <Button
               key={item.id}
               variant="ghost"
-              className="justify-start text-lg py-3"
+              className="justify-start text-lg py-6 border-b border-gray-100"
               onClick={() => (item.isLink ? (window.location.href = item.href!) : scrollToSection(item.id))}
             >
               {item.label}
@@ -90,7 +103,7 @@ export default function MobileNavigation({ items, onContactClick }: MobileNaviga
           ))}
 
           <Button
-            className="bg-blue-600 hover:bg-blue-700 text-white mt-4"
+            className="bg-blue-600 hover:bg-blue-700 text-white mt-6"
             onClick={() => {
               setIsOpen(false)
               onContactClick()
@@ -100,10 +113,6 @@ export default function MobileNavigation({ items, onContactClick }: MobileNaviga
           </Button>
         </nav>
       </div>
-
-      {/* Overlay when menu is open */}
-      {isOpen && <div className="fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setIsOpen(false)} />}
     </>
   )
 }
-

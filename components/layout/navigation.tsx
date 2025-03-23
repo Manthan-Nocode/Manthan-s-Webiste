@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button"
 import MobileNavigation from "./mobile-navigation"
 // Import the useRouter hook at the top of the file
 import { useRouter } from "next/navigation"
-import { Menu, X } from "lucide-react"
 
 interface NavigationProps {
   items: Array<{
@@ -22,7 +21,6 @@ export default function Navigation({ items, onContactClick }: NavigationProps) {
   const [scrolled, setScrolled] = useState(false)
   // Add the router inside the component function
   const router = useRouter()
-  const [isOpen, setIsOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -81,10 +79,10 @@ export default function Navigation({ items, onContactClick }: NavigationProps) {
         scrolled ? "bg-white shadow-md py-2" : "bg-transparent py-4"
       }`}
     >
-      <div className="container mx-auto flex items-center justify-between">
-        <div></div>
+      <div className="container mx-auto flex items-center justify-between px-4">
+        <div className="flex-1 md:flex-none">{/* Logo or brand could go here */}</div>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation - unchanged */}
         <nav className="hidden md:flex items-center space-x-6">
           {items.map((item) => (
             <button
@@ -106,27 +104,10 @@ export default function Navigation({ items, onContactClick }: NavigationProps) {
         </nav>
 
         {/* Mobile Navigation */}
-        <Button
-          variant="ghost"
-          size="icon"
-          className="md:hidden mobile-menu-button"
-          onClick={() => setIsOpen(!isOpen)}
-          aria-label={isOpen ? "Close menu" : "Open menu"}
-          aria-expanded={isOpen}
-          aria-controls="mobile-navigation"
-        >
-          {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </Button>
-        <div
-          id="mobile-navigation"
-          className={`mobile-nav ${isOpen ? "mobile-nav-open" : "mobile-nav-closed"} p-6`}
-          role="menu"
-          aria-hidden={!isOpen}
-        >
+        <div className="md:hidden">
           <MobileNavigation items={items} onContactClick={onContactClick} />
         </div>
       </div>
     </header>
   )
 }
-

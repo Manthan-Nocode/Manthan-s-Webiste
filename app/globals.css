@@ -107,6 +107,7 @@
     @apply bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300;
   }
 
+  /* Mobile navigation styles */
   .mobile-nav {
     @apply fixed top-0 right-0 h-screen w-3/4 bg-white shadow-lg z-50 transform transition-transform duration-300 ease-in-out;
   }
@@ -218,6 +219,32 @@
     padding-top: 2rem;
     padding-bottom: 2rem;
   }
+
+  /* Mobile-specific fixes for skill cards */
+  .skill-card-border {
+    border-top-width: 4px !important;
+  }
+
+  .skill-card-icon {
+    padding: 0.75rem !important;
+    border-radius: 0.5rem !important;
+  }
+
+  /* Mobile-specific fixes for case studies */
+  .case-study-result {
+    padding: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  .case-study-icon {
+    padding: 0.5rem !important;
+    margin-top: 0.25rem !important;
+  }
+
+  .case-study-title {
+    font-size: 0.875rem !important;
+    line-height: 1.25rem !important;
+  }
 }
 
 /* Text truncation utilities */
@@ -259,4 +286,3 @@
 .hover\:bg-blue-700:hover {
   background-color: #1d4ed8 !important;
 }
-

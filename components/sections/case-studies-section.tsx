@@ -97,17 +97,19 @@ export default function CaseStudiesSection({ caseStudies = [] }: CaseStudiesSect
                     <div>
                       <h4 className="text-lg font-medium mb-3 text-purple-700">The Results</h4>
 
-                      <div className="grid sm:grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         {activeStudy.results.map((result, index) => (
                           <div
                             key={index}
-                            className={cn(
-                              "flex items-start gap-3 bg-white bg-opacity-70 p-3 rounded-md border shadow-sm",
-                              `border-${result.color}-200`,
-                            )}
+                            className="flex items-start gap-3 bg-white bg-opacity-70 p-3 rounded-md border shadow-sm case-study-result"
+                            style={{ borderColor: getResultBorderColor(result.color) }}
                           >
                             <div
-                              className={cn("p-2 rounded-full mt-1", `bg-${result.color}-100 text-${result.color}-600`)}
+                              className="p-2 rounded-full mt-1 case-study-icon"
+                              style={{
+                                backgroundColor: getResultBgColor(result.color),
+                                color: getResultTextColor(result.color),
+                              }}
                             >
                               <svg
                                 width="16"
@@ -127,7 +129,12 @@ export default function CaseStudiesSection({ caseStudies = [] }: CaseStudiesSect
                               </svg>
                             </div>
                             <div>
-                              <p className={cn("font-medium", `text-${result.color}-800`)}>{result.title}</p>
+                              <p
+                                className="font-medium case-study-title"
+                                style={{ color: getResultTitleColor(result.color) }}
+                              >
+                                {result.title}
+                              </p>
                               <p className="text-gray-700 text-sm">{result.description}</p>
                             </div>
                           </div>
@@ -160,3 +167,51 @@ export default function CaseStudiesSection({ caseStudies = [] }: CaseStudiesSect
   )
 }
 
+// Helper functions for case study result colors
+function getResultBorderColor(color: string): string {
+  const colorMap: Record<string, string> = {
+    blue: "#dbeafe",
+    indigo: "#e0e7ff",
+    purple: "#ede9fe",
+    pink: "#fce7f3",
+    fuchsia: "#fae8ff",
+  }
+
+  return colorMap[color] || "#dbeafe" // Default to blue if color not found
+}
+
+function getResultBgColor(color: string): string {
+  const colorMap: Record<string, string> = {
+    blue: "#eff6ff",
+    indigo: "#eef2ff",
+    purple: "#f5f3ff",
+    pink: "#fdf2f8",
+    fuchsia: "#fdf4ff",
+  }
+
+  return colorMap[color] || "#eff6ff" // Default to blue if color not found
+}
+
+function getResultTextColor(color: string): string {
+  const colorMap: Record<string, string> = {
+    blue: "#3b82f6",
+    indigo: "#6366f1",
+    purple: "#8b5cf6",
+    pink: "#ec4899",
+    fuchsia: "#d946ef",
+  }
+
+  return colorMap[color] || "#3b82f6" // Default to blue if color not found
+}
+
+function getResultTitleColor(color: string): string {
+  const colorMap: Record<string, string> = {
+    blue: "#1e40af",
+    indigo: "#3730a3",
+    purple: "#6b21a8",
+    pink: "#9d174d",
+    fuchsia: "#86198f",
+  }
+
+  return colorMap[color] || "#1e40af" // Default to blue if color not found
+}

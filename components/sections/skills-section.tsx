@@ -131,12 +131,17 @@ export default function SkillsSection({
               key={index}
               className={cn(
                 `bg-white rounded-lg shadow-sm overflow-hidden border-t-4 ${cardHoverClass}`,
-                `border-${skill.color}-500`,
+                // Use inline styles for border color to ensure it works on mobile
+                "skill-card-border",
               )}
+              style={{ borderTopColor: getBorderColor(skill.color) }}
             >
               <div className="p-5">
                 <div className="flex items-center mb-3">
-                  <div className={cn("p-3 rounded-lg", `bg-${skill.color}-500`)}>
+                  <div
+                    className="p-3 rounded-lg skill-card-icon"
+                    style={{ backgroundColor: getIconBgColor(skill.color) }}
+                  >
                     {renderIcon(skill.icon, "h-5 w-5 text-white")}
                   </div>
                   <div className="ml-4">
@@ -164,3 +169,30 @@ export default function SkillsSection({
   )
 }
 
+// Helper function to get border color
+function getBorderColor(color: string): string {
+  const colorMap: Record<string, string> = {
+    blue: "#3b82f6",
+    indigo: "#6366f1",
+    purple: "#8b5cf6",
+    green: "#10b981",
+    teal: "#14b8a6",
+    orange: "#f97316",
+  }
+
+  return colorMap[color] || "#3b82f6" // Default to blue if color not found
+}
+
+// Helper function to get icon background color
+function getIconBgColor(color: string): string {
+  const colorMap: Record<string, string> = {
+    blue: "#3b82f6",
+    indigo: "#6366f1",
+    purple: "#8b5cf6",
+    green: "#10b981",
+    teal: "#14b8a6",
+    orange: "#f97316",
+  }
+
+  return colorMap[color] || "#3b82f6" // Default to blue if color not found
+}
