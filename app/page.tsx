@@ -11,6 +11,9 @@ import CaseStudiesSection from "@/components/sections/case-studies-section"
 import ContactSection from "@/components/sections/contact-section"
 import { useMobile } from "@/hooks/use-mobile"
 import type { PortfolioItem, CaseStudy, SkillCategory } from "@/types"
+import { Button } from "@/components/ui/button"
+import { ArrowRight } from "lucide-react"
+import Link from "next/link"
 
 export default function Home() {
   // State for mock data fetching
@@ -204,6 +207,107 @@ export default function Home() {
       {/* About Section */}
       <AboutSection />
 
+      {/* Strategic Innovation Section */}
+      <section className="w-full py-16 px-4 bg-white">
+        <div className="container mx-auto max-w-5xl">
+          <div className="flex justify-center mb-5">
+            <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-blue-100">
+              <span className="text-sm font-medium text-blue-600">STRATEGIC INNOVATION</span>
+            </div>
+          </div>
+
+          <h2 className="text-3xl md:text-4xl font-bold mb-2 text-center">Transforming Businesses</h2>
+          <h3 className="text-2xl md:text-3xl font-bold mb-4 text-center text-blue-600">
+            Through Strategic Innovation
+          </h3>
+
+          <p className="text-center text-gray-600 max-w-3xl mx-auto mb-8">
+            As a strategic advisor and tech entrepreneur, I help businesses leverage AI and automation to unlock growth.
+            My expertise spans product management, business strategy, and technological innovation— delivering solutions
+            that drive both efficiency and strategic advantage.
+          </p>
+
+          <div className="flex justify-center mb-10">
+            <Button className="bg-blue-600 hover:bg-blue-700">
+              Schedule a Free Consultation <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 mb-10">
+            <div className="bg-white p-6 border border-gray-200 transition-all duration-300 hover:shadow-lg hover:border-blue-200 hover:translate-y-[-5px]">
+              <div className="bg-blue-600 p-3 rounded w-12 h-12 flex items-center justify-center mb-5">
+                <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-800">Strategic AI Implementation</h3>
+              <p className="text-gray-600 mb-5">
+                Leverage AI to solve complex business challenges and unlock new opportunities. Transform bottlenecks
+                into breakthrough moments with data-driven solutions.
+              </p>
+              <Link href="#" className="text-blue-600 hover:text-blue-700 inline-flex items-center group">
+                Learn more{" "}
+                <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </div>
+
+            <div className="bg-white p-6 border border-gray-200 transition-all duration-300 hover:shadow-lg hover:border-purple-200 hover:translate-y-[-5px]">
+              <div className="bg-purple-600 p-3 rounded w-12 h-12 flex items-center justify-center mb-5">
+                <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-800">Product Strategy & Innovation</h3>
+              <p className="text-gray-600 mb-5">
+                Drive product success through strategic vision and market insight. Two-time tech entrepreneur with
+                proven track record of launching successful products.
+              </p>
+              <Link href="#" className="text-blue-600 hover:text-blue-700 inline-flex items-center group">
+                Learn more{" "}
+                <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </div>
+
+            <div className="bg-white p-6 border border-gray-200 transition-all duration-300 hover:shadow-lg hover:border-purple-200 hover:translate-y-[-5px]">
+              <div className="bg-purple-600 p-3 rounded w-12 h-12 flex items-center justify-center mb-5">
+                <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                  />
+                </svg>
+              </div>
+              <h3 className="text-xl font-semibold mb-3 text-gray-800">Business Transformation</h3>
+              <p className="text-gray-600 mb-5">
+                Guide organizations through digital transformation with a focus on strategic growth. Blend technology
+                and business strategy for measurable results.
+              </p>
+              <Link href="#" className="text-blue-600 hover:text-blue-700 inline-flex items-center group">
+                Learn more{" "}
+                <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="bg-blue-50 p-8 rounded border border-blue-100 mb-8">
+            <div className="text-gray-700 italic text-center">
+              <span className="text-3xl text-blue-300">"</span> Their strategic vision transformed our business
+              operations. Not just through automation, but by reimagining our entire approach to technology and
+              innovation. The impact on our bottom line has been remarkable.{" "}
+              <span className="text-3xl text-blue-300">"</span>
+            </div>
+            <div className="text-center mt-4 text-blue-600 font-medium">— Michael Chen, CEO</div>
+          </div>
+        </div>
+      </section>
+
       {/* Portfolio Section */}
       <PortfolioSection
         portfolioItems={portfolioItems}
@@ -245,3 +349,4 @@ export default function Home() {
     </main>
   )
 }
+

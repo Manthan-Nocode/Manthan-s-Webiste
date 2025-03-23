@@ -118,6 +118,31 @@
   .mobile-nav-closed {
     @apply translate-x-full;
   }
+
+  /* Add these new styles for the Strategic Innovation cards */
+  .innovation-card {
+    @apply bg-white p-6 border border-gray-200 transition-all duration-300;
+  }
+
+  .innovation-card:hover {
+    @apply shadow-lg translate-y-[-5px];
+  }
+
+  .innovation-card-icon {
+    @apply p-3 rounded w-12 h-12 flex items-center justify-center mb-5 text-white;
+  }
+
+  .learn-more-link {
+    @apply text-blue-600 hover:text-blue-700 inline-flex items-center;
+  }
+
+  .learn-more-link svg {
+    @apply ml-1 h-4 w-4 transition-transform duration-300;
+  }
+
+  .learn-more-link:hover svg {
+    @apply translate-x-1;
+  }
 }
 
 /* Prose styles for blog content */
