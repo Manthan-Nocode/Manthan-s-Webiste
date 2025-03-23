@@ -82,4 +82,3 @@ export interface HeroFeature {
   icon: string
   text: string
 }
-
