@@ -9,6 +9,18 @@ const config: Config = {
     "./src/**/*.{ts,tsx}",
     "*.{js,ts,jsx,tsx,mdx}",
   ],
+  // Ensure safelist includes key utility classes
+  safelist: [
+    "bg-blue-600",
+    "text-blue-600",
+    "from-blue-300",
+    "to-indigo-400",
+    "from-indigo-300",
+    "to-purple-400",
+    "from-purple-300",
+    "to-pink-400",
+    // Add other gradient classes used in your portfolio items
+  ],
   theme: {
     container: {
       center: true,

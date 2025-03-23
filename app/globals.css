@@ -28,6 +28,7 @@
 .dark {
   --background: 222.2 84% 4.9%;
   --foreground: 210 40% 98%;
+  /* Other dark mode variables */
   --card: 222.2 84% 4.9%;
   --card-foreground: 210 40% 98%;
   --popover: 222.2 84% 4.9%;
@@ -47,6 +48,7 @@
   --ring: 224.3 76.3% 48%;
 }
 
+/* Ensure base styles are applied */
 @layer base {
   * {
     @apply border-border;
@@ -65,6 +67,7 @@
   }
 }
 
+/* Explicitly define component styles */
 @layer components {
   .btn-primary {
     @apply bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md transition-colors duration-200;
@@ -88,6 +91,16 @@
 
   .section-subtitle {
     @apply text-center text-gray-600 max-w-3xl mx-auto mb-8;
+  }
+
+  /* Add explicit styling for portfolio cards */
+  .portfolio-card {
+    @apply rounded-lg overflow-hidden border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md hover:transform hover:scale-105;
+  }
+
+  /* Add explicit styling for skill cards */
+  .skill-card {
+    @apply bg-white p-6 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-all duration-300;
   }
 
   .mobile-nav {

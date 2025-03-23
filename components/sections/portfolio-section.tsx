@@ -49,7 +49,7 @@ export default function PortfolioSection({ portfolioItems = [], onViewAllClick }
             {portfolioItems.map((item, index) => (
               <div
                 key={item.id}
-                className={`rounded-lg overflow-hidden border border-gray-100 shadow-sm ${cardHoverClass}`}
+                className="portfolio-card rounded-lg overflow-hidden border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md hover:transform hover:scale-105"
               >
                 <div className={`relative bg-gradient-to-r ${item.gradient} h-48`}>
                   <div className="absolute top-4 right-4 bg-white rounded-full px-2 py-1 text-xs">{item.year}</div>
@@ -76,7 +76,10 @@ export default function PortfolioSection({ portfolioItems = [], onViewAllClick }
                     ))}
                   </div>
                   <div className="flex items-center justify-between">
-                    <Button variant="link" className="text-blue-600 p-0">
+                    <Button
+                      className="text-blue-600 hover:text-blue-700 hover:underline flex items-center"
+                      variant="link"
+                    >
                       View Project <ArrowRight className="ml-1 h-4 w-4" />
                     </Button>
                     <ExternalLink className="h-4 w-4 text-gray-400" />
@@ -96,4 +99,3 @@ export default function PortfolioSection({ portfolioItems = [], onViewAllClick }
     </section>
   )
 }
-
