@@ -9,7 +9,6 @@ import PortfolioSection from "@/components/sections/portfolio-section"
 import SkillsSection from "@/components/sections/skills-section"
 import CaseStudiesSection from "@/components/sections/case-studies-section"
 import ContactSection from "@/components/sections/contact-section"
-import TestimonialsSection from "@/components/sections/testimonials-section"
 import BlogSection from "@/components/sections/blog-section"
 import { useAnalytics } from "@/hooks/use-analytics"
 
@@ -267,9 +266,6 @@ export default function HomePage() {
       {/* Case Studies Section */}
       <CaseStudiesSection caseStudies={caseStudies} />
 
-      {/* Testimonials Section */}
-      <TestimonialsSection />
-
       {/* Blog Section */}
       <BlogSection />
 
@@ -278,4 +274,3 @@ export default function HomePage() {
     </main>
   )
 }
-
