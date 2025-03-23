@@ -14,13 +14,36 @@ import BlogSection from "@/components/sections/blog-section"
 // Import React hooks last, only once
 import { useState, useEffect } from "react"
 
+// Define types
+interface PortfolioItem {
+  id: string
+  title: string
+  description: string
+  imageUrl: string
+  projectUrl: string
+}
+
+interface CaseStudy {
+  id: string
+  title: string
+  description: string
+  imageUrl: string
+  projectUrl: string
+}
+
+interface SkillCategory {
+  id: string
+  name: string
+  skills: { name: string; icon: string }[]
+}
+
 export default function HomePage() {
   // State for mock data fetching
-  const [portfolioItems, setPortfolioItems] = useState([])
-  const [caseStudies, setCaseStudies] = useState([])
-  const [skillCategories, setSkillCategories] = useState([])
+  const [portfolioItems, setPortfolioItems] = useState<PortfolioItem[]>([])
+  const [caseStudies, setCaseStudies] = useState<CaseStudy[]>([])
+  const [skillCategories, setSkillCategories] = useState<SkillCategory[]>([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+  const [error, setError] = useState<string | null>(null)
   const [activeSection, setActiveSection] = useState("home")
 
   // Navigation items
