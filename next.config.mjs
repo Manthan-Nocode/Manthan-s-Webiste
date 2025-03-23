@@ -12,7 +12,7 @@ const nextConfig = {
   },
   // Ensure CSS is properly processed
   webpack: (config) => {
-    // This helps with CSS processing
+    // Ensure CSS processing is working correctly
     const rules = config.module.rules
       .find((rule) => typeof rule.oneOf === 'object')
       .oneOf.filter((rule) => Array.isArray(rule.use));

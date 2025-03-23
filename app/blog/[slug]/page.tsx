@@ -56,7 +56,7 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
         setRelatedPosts(related)
       } catch (err) {
         console.error("Error fetching blog post:", err)
-        setError(err.message || "Error loading blog post")
+        setError(err instanceof Error ? err.message : "Error loading blog post")
       } finally {
         setLoading(false)
       }
@@ -425,4 +425,3 @@ export default function BlogPostPage({ params }: { params: { slug: string } }) {
     </main>
   )
 }
-

@@ -95,7 +95,11 @@
 
   /* Add explicit styling for portfolio cards */
   .portfolio-card {
-    @apply rounded-lg overflow-hidden border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md hover:transform hover:scale-105;
+    @apply rounded-lg overflow-hidden border border-gray-100 shadow-sm transition-all duration-300;
+  }
+
+  .portfolio-card:hover {
+    @apply shadow-md transform scale-105;
   }
 
   /* Add explicit styling for skill cards */
@@ -216,4 +220,17 @@
   .hover\:bg-blue-700:hover {
     background-color: inherit;
   }
+}
+
+/* Also ensure the blue color is explicitly defined: */
+.text-blue-600 {
+  color: #2563eb !important;
+}
+
+.bg-blue-600 {
+  background-color: #2563eb !important;
+}
+
+.hover\:bg-blue-700:hover {
+  background-color: #1d4ed8 !important;
 }

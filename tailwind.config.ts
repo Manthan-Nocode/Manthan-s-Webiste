@@ -19,7 +19,10 @@ const config: Config = {
     "to-purple-400",
     "from-purple-300",
     "to-pink-400",
-    // Add other gradient classes used in your portfolio items
+    "hover:bg-blue-700",
+    "hover:shadow-md",
+    "hover:scale-105",
+    "card-hover",
   ],
   theme: {
     container: {

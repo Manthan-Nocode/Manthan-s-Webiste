@@ -47,10 +47,7 @@ export default function PortfolioSection({ portfolioItems = [], onViewAllClick }
         ) : (
           <div className="grid md:grid-cols-3 gap-6">
             {portfolioItems.map((item, index) => (
-              <div
-                key={item.id}
-                className="portfolio-card rounded-lg overflow-hidden border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md hover:transform hover:scale-105"
-              >
+              <div key={item.id} className="portfolio-card rounded-lg overflow-hidden border border-gray-100 shadow-sm">
                 <div className={`relative bg-gradient-to-r ${item.gradient} h-48`}>
                   <div className="absolute top-4 right-4 bg-white rounded-full px-2 py-1 text-xs">{item.year}</div>
                   <div className="w-full h-full flex items-center justify-center">
