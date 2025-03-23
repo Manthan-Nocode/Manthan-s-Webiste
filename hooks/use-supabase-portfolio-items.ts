@@ -36,7 +36,7 @@ export function useSupabasePortfolioItems() {
         setItems(transformedData)
       } catch (err) {
         console.error("Error fetching portfolio items:", err)
-        setError("Failed to load portfolio items")
+        setError(err instanceof Error ? err.message : "Failed to load portfolio items")
       } finally {
         setLoading(false)
       }
@@ -47,4 +47,3 @@ export function useSupabasePortfolioItems() {
 
   return { items, loading, error }
 }
-

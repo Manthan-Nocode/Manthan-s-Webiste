@@ -32,7 +32,7 @@ export default function BlogSection() {
         setPosts(data || [])
       } catch (err) {
         console.error("Error fetching blog posts:", err)
-        setError("Failed to load blog posts")
+        setError(err instanceof Error ? err.message : "Failed to load blog posts")
       } finally {
         setLoading(false)
       }
@@ -78,7 +78,7 @@ export default function BlogSection() {
               <Card key={post.id} className="border border-gray-200 hover:shadow-md transition-all duration-300">
                 <CardContent className="p-0">
                   <div className={`h-48 bg-gradient-to-r ${post.image || "from-blue-300 to-indigo-400"}`}>
-                    {post.is_new && (
+                    {post.isNew && (
                       <div className="bg-blue-600 text-white text-xs px-2 py-1 absolute top-4 right-4 rounded">NEW</div>
                     )}
                   </div>
@@ -86,7 +86,7 @@ export default function BlogSection() {
                     <div className="flex items-center text-sm text-gray-500 mb-2">
                       <span>{post.date}</span>
                       <span className="mx-2">•</span>
-                      <span>{post.read_time}</span>
+                      <span>{post.readTime}</span>
                     </div>
                     <h3 className="text-xl font-semibold mb-2">{post.title}</h3>
                     <p className="text-gray-600 mb-4">{post.excerpt}</p>
@@ -113,4 +113,3 @@ export default function BlogSection() {
     </section>
   )
 }
-

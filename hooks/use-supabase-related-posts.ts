@@ -56,7 +56,7 @@ export function useSupabaseRelatedPosts(currentSlug: string, tags: string[], lim
         setPosts(transformedData)
       } catch (err) {
         console.error("Error fetching related blog posts:", err)
-        setError("Failed to load related posts")
+        setError(err instanceof Error ? err.message : "Failed to load related posts")
       } finally {
         setLoading(false)
       }
@@ -67,4 +67,3 @@ export function useSupabaseRelatedPosts(currentSlug: string, tags: string[], lim
 
   return { posts, loading, error }
 }
-
