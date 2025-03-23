@@ -25,6 +25,14 @@ import { api } from "@/services/api"
 import type { BlogPost } from "@/types"
 import { toast } from "sonner"
 
+// Add TypeScript declaration for Google Analytics
+declare global {
+  interface Window {
+    gtag?: (...args: any[]) => void
+    va?: (...args: any[]) => void
+  }
+}
+
 export default function BlogPostPage({ slug }: { slug: string }) {
   // State for blog data
   const [post, setPost] = useState<BlogPost | null>(null)
@@ -62,7 +70,8 @@ export default function BlogPostPage({ slug }: { slug: string }) {
         })
       } catch (err) {
         console.error("Error fetching blog post:", err)
-        setError(err.message || "Error loading blog post")
+        const errorMessage = err instanceof Error ? err.message : "Error loading blog post"
+        setError(errorMessage)
       } finally {
         setLoading(false)
       }
