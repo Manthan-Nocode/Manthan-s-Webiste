@@ -298,6 +298,35 @@
   #case-studies .bg-white.bg-opacity-70.p-4 {
     padding: 1rem !important;
   }
+
+  /* Fix for overlapping tabs in SUCCESS STORIES section on mobile */
+  #case-studies .flex.justify-center.mb-6 {
+    margin-bottom: 4.5rem !important; /* Increase bottom margin to prevent overlap with tabs */
+  }
+
+  #case-studies .text-center.text-gray-600.max-w-3xl.mx-auto.mb-8 {
+    margin-bottom: 3.5rem !important; /* Increase bottom margin for the description text */
+  }
+
+  #case-studies .TabsList {
+    margin-top: 1rem !important; /* Add space above the tabs */
+  }
+
+  #case-studies .TabsTrigger {
+    padding-top: 0.5rem !important;
+    padding-bottom: 0.5rem !important;
+    font-size: 0.875rem !important; /* Slightly smaller font size on mobile */
+  }
+
+  /* Ensure tabs don't overlap with content below */
+  #case-studies .Tabs {
+    margin-bottom: 1.5rem !important;
+  }
+
+  /* Add more space between section title and description */
+  #case-studies .text-3xl.md\:text-4xl.font-bold.mb-4.text-center {
+    margin-bottom: 1rem !important;
+  }
 }
 
 /* Text truncation utilities */
