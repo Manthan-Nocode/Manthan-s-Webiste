@@ -46,7 +46,7 @@ export function useSupabaseBlogPost(slug: string) {
         setPost(transformedData)
       } catch (err) {
         console.error(`Error fetching blog post with slug ${slug}:`, err)
-        setError("Failed to load blog post")
+        setError(err instanceof Error ? err.message : "Failed to load blog post")
       } finally {
         setLoading(false)
       }

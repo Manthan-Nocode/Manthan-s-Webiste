@@ -67,3 +67,4 @@ export function useSupabaseRelatedPosts(currentSlug: string, tags: string[], lim
 
   return { posts, loading, error }
 }
+
