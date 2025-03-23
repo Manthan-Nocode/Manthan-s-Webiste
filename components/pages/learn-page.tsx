@@ -57,7 +57,7 @@ export default function LearnPage() {
         })
       } catch (err) {
         console.error("Error fetching blog posts:", err)
-        setError(err.message || "Failed to load blog posts")
+        setError(err instanceof Error ? err.message : "Failed to load blog posts")
       } finally {
         setLoading(false)
       }
@@ -605,4 +605,3 @@ export default function LearnPage() {
     </main>
   )
 }
-
