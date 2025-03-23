@@ -31,7 +31,7 @@ export function useSupabaseRelatedPosts(currentSlug: string, tags: string[], lim
 
         // Filter posts that have at least one matching tag
         // This is done client-side since Supabase doesn't support array overlap operations directly
-        const filteredData = data.filter((post) => post.tags.some((tag) => tags.includes(tag))).slice(0, limit)
+        const filteredData = data.filter((post) => post.tags.some((tag: string) => tags.includes(tag))).slice(0, limit)
 
         // Transform the data to match our BlogPost type
         const transformedData: BlogPost[] = filteredData.map((post) => ({
@@ -67,4 +67,3 @@ export function useSupabaseRelatedPosts(currentSlug: string, tags: string[], lim
 
   return { posts, loading, error }
 }
-
