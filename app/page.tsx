@@ -136,7 +136,7 @@ export default function Home() {
   }, [])
 
   // Scroll to section utilities
-  const scrollToSection = (sectionId) => {
+  const scrollToSection = (sectionId: string) => {
     const section = document.getElementById(sectionId)
     if (section) {
       const navHeight = 80 // Height of the navigation bar
