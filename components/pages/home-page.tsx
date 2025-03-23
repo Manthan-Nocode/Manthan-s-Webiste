@@ -14,28 +14,8 @@ import BlogSection from "@/components/sections/blog-section"
 // Import React hooks last, only once
 import { useState, useEffect } from "react"
 
-// Define types
-interface PortfolioItem {
-  id: string
-  title: string
-  description: string
-  imageUrl: string
-  projectUrl: string
-}
-
-interface CaseStudy {
-  id: string
-  title: string
-  description: string
-  imageUrl: string
-  projectUrl: string
-}
-
-interface SkillCategory {
-  id: string
-  name: string
-  skills: { name: string; icon: string }[]
-}
+// Import the types from the types file
+import type { PortfolioItem, CaseStudy, SkillCategory } from "@/types"
 
 export default function HomePage() {
   // State for mock data fetching
