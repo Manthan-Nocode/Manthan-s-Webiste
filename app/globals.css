@@ -267,6 +267,37 @@
     display: inline-block;
     margin-left: 0.25em;
   }
+
+  /* Increase spacing between result cards in mobile grid */
+  #case-studies .grid.grid-cols-1.gap-3 {
+    gap: 0.875rem !important;
+  }
+
+  /* Improve spacing within each case study result card */
+  #case-studies .case-study-result {
+    padding: 0.875rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+
+  /* Add space for the text inside result cards */
+  #case-studies .case-study-text {
+    padding-left: 0.25rem !important;
+  }
+
+  /* Increase space between main sections of the case study */
+  #case-studies .space-y-4 > * {
+    margin-bottom: 1.25rem !important;
+  }
+
+  /* Add more space between challenge and solution cards */
+  #case-studies .space-y-3 > * {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Add more padding to challenge and solution cards */
+  #case-studies .bg-white.bg-opacity-70.p-4 {
+    padding: 1rem !important;
+  }
 }
 
 /* Text truncation utilities */
