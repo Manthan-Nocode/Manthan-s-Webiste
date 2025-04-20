@@ -24,4 +24,3 @@ export async function GET() {
     return NextResponse.json({ error: "Failed to check deployment" }, { status: 500 })
   }
 }
-

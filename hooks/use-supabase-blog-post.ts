@@ -57,4 +57,3 @@ export function useSupabaseBlogPost(slug: string) {
 
   return { post, loading, error }
 }
-

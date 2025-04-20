@@ -478,4 +478,130 @@ export const api = {
       }
     }
   },
+
+  /**
+   * Fetch blog posts with optimized query (select only necessary columns)
+   * @returns Promise<BlogPost[]> Array of blog posts
+   */
+  async fetchBlogPosts(): Promise<BlogPost[]> {
+    try {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select("id, title, slug, excerpt, featured_image, published_at, tags")
+        .order("published_at", { ascending: false })
+
+      if (error) {
+        console.error("Error fetching blog posts:", error)
+        throw new Error(error.message)
+      }
+
+      // Transform the data to match our BlogPost type
+      return data
+        ? data.map(
+            (item): BlogPost => ({
+              id: item.id,
+              title: item.title,
+              slug: item.slug,
+              date: item.published_at || "",
+              readTime: "5 min read", // Default value
+              excerpt: item.excerpt || "",
+              image: item.featured_image || "from-blue-300 to-indigo-400", // Default gradient
+              isNew: false, // Default value
+              category: "Technology", // Default value
+              author: "Admin", // Default value
+              views: "0",
+              likes: "0",
+              comments: "0",
+              tags: item.tags || [],
+              content: "",
+            }),
+          )
+        : []
+    } catch (error) {
+      console.error("Error fetching blog posts:", error)
+      return []
+    }
+  },
+
+  /**
+   * Fetch a single blog post by slug with optimized query
+   * @param slug The unique slug of the blog post
+   * @returns Promise<BlogPost | null> The blog post or null if not found
+   */
+  async fetchBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+    try {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select("id, title, slug, content, featured_image, published_at, tags, author")
+        .eq("slug", slug)
+        .single()
+
+      if (error) {
+        console.error(`Error fetching blog post with slug ${slug}:`, error)
+        throw new Error(error.message)
+      }
+
+      if (!data) return null
+
+      // Transform to match BlogPost type
+      return {
+        id: data.id,
+        title: data.title,
+        slug: data.slug,
+        date: data.published_at || "",
+        readTime: "5 min read", // Default value
+        excerpt: data.content?.substring(0, 150) + "..." || "",
+        image: data.featured_image || "from-blue-300 to-indigo-400", // Default gradient
+        isNew: false, // Default value
+        category: "Technology", // Default value
+        author: data.author || "Admin",
+        authorAvatar: undefined,
+        views: "0",
+        likes: "0",
+        comments: "0",
+        tags: data.tags || [],
+        content: data.content || "",
+      }
+    } catch (error) {
+      console.error(`Error fetching blog post with slug ${slug}:`, error)
+      return null
+    }
+  },
+
+  /**
+   * Fetch portfolio items with optimized query
+   * @returns Promise<PortfolioItem[]> Array of portfolio items
+   */
+  async fetchPortfolioItems(): Promise<PortfolioItem[]> {
+    try {
+      const { data, error } = await supabase
+        .from("portfolio_items")
+        .select("id, title, description, image, tags, year, gradient, url")
+        .order("year", { ascending: false })
+
+      if (error) {
+        console.error("Error fetching portfolio items:", error)
+        throw new Error(error.message)
+      }
+
+      // Transform to match PortfolioItem type
+      return data
+        ? data.map(
+            (item): PortfolioItem => ({
+              id: item.id,
+              title: item.title,
+              description: item.description || "",
+              year: item.year || "",
+              image: item.image || "/placeholder.svg?height=200&width=300",
+              gradient: item.gradient || "from-blue-300 to-indigo-400",
+              tags: item.tags || [],
+              url: item.url,
+            }),
+          )
+        : []
+    } catch (error) {
+      console.error("Error fetching portfolio items:", error)
+      return []
+    }
+  },
 }

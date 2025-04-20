@@ -8,4 +8,3 @@ interface FlippingProblemStatementProps {
 export function FlippingProblemStatement({ statements }: FlippingProblemStatementProps) {
   return <FlippingStatement statements={statements} />
 }
-

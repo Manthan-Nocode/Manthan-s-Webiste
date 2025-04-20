@@ -62,7 +62,7 @@ export default function HeroSection({
             View My Work <ArrowRight className="ml-2 h-4 w-4" />
           </Button>
           <Button onClick={onContactClick} variant="outline" className="w-full sm:w-auto border-gray-300">
-            Contact Me
+            Hire Me
           </Button>
         </div>
 

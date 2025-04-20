@@ -5,4 +5,3 @@ interface Window {
   // Vercel Analytics
   va?: (...args: any[]) => void
 }
-

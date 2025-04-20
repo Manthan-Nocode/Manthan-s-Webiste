@@ -338,4 +338,3 @@ function getColorClasses(colorClass: "blue" | "indigo" | "purple") {
       }
   }
 }
-

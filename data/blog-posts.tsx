@@ -102,4 +102,3 @@ export const blogPosts = [
     authorAvatar: "/placeholder.svg?height=40&width=40",
   },
 ]
-

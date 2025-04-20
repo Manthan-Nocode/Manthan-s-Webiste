@@ -17,7 +17,7 @@ import { ArrowRight } from "lucide-react"
 import Link from "next/link"
 
 // Import React hooks last, only once
-import { useState, useEffect } from "react"
+import { useState, useEffect, useCallback } from "react"
 
 export default function Home() {
   // State for mock data fetching
@@ -29,14 +29,17 @@ export default function Home() {
   const [activeSection, setActiveSection] = useState("home")
   const isMobile = useMobile()
 
+  // Update the navigationItems array to properly set up the Learn link
+  // Find the navigationItems array and update it
+
   // Navigation items
   const navigationItems = [
     { id: "home", label: "Home" },
     { id: "about", label: "About Me" },
     { id: "portfolio", label: "Portfolio" },
     { id: "skills", label: "Skills" },
-    { id: "strategic-innovation", label: "Learn", isLink: true, href: "/coming-soon" },
-    { id: "case-studies", label: "Case Studies" },
+    { id: "learn", label: "Learn", isLink: true, href: "/learn" },
+    { id: "contact", label: "Hire Me" },
   ]
 
   // Hero section features
@@ -126,34 +129,23 @@ export default function Home() {
     }
 
     fetchData()
-
-    // Force CSS reload
-    const reloadCSS = () => {
-      const links = document.getElementsByTagName("link")
-      for (let i = 0; i < links.length; i++) {
-        const link = links[i]
-        if (link.rel === "stylesheet") {
-          link.href = link.href.split("?")[0] + "?v=" + new Date().getTime()
-        }
-      }
-    }
-
-    // Reload CSS after a short delay to ensure DOM is ready
-    setTimeout(reloadCSS, 500)
   }, [])
 
-  // Scroll to section utilities
-  const scrollToSection = (sectionId: string) => {
+  // Improved smooth scrolling function
+  const scrollToSection = useCallback((sectionId: string) => {
     const section = document.getElementById(sectionId)
     if (section) {
-      const navHeight = 80 // Height of the navigation bar
-      const sectionTop = section.getBoundingClientRect().top + window.scrollY
+      // Get the header height dynamically
+      const header = document.querySelector("header") as HTMLElement
+      const headerHeight = header ? header.offsetHeight : 0
+
+      // Use native smooth scrolling with proper offset
       window.scrollTo({
-        top: sectionTop - navHeight,
+        top: section.offsetTop - headerHeight,
         behavior: "smooth",
       })
     }
-  }
+  }, [])
 
   // Show loading state while data is being fetched
   if (loading) {
@@ -194,26 +186,30 @@ export default function Home() {
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center">
+    <main className="flex min-h-screen flex-col items-center [&>section]:mb-0">
       {/* Navigation */}
       <Navigation items={navigationItems} onContactClick={() => scrollToSection("contact")} />
 
       {/* Hero Section */}
-      <HeroSection
-        title="Simplifying Business Processes"
-        subtitle="with No-Code Automation"
-        features={heroFeatures}
-        problemStatements={problemStatements}
-        onViewWorkClick={() => scrollToSection("portfolio")}
-        onContactClick={() => scrollToSection("contact")}
-      />
+      <section id="home">
+        <HeroSection
+          title="Simplifying Business Processes"
+          subtitle="with No-Code Automation"
+          features={heroFeatures}
+          problemStatements={problemStatements}
+          onViewWorkClick={() => scrollToSection("portfolio")}
+          onContactClick={() => scrollToSection("contact")}
+        />
+      </section>
 
       {/* About Section */}
-      <AboutSection />
+      <section id="about">
+        <AboutSection />
+      </section>
 
       {/* Strategic Innovation Section */}
-      <section className="w-full py-16 px-4 bg-white">
-        <div className="container mx-auto max-w-5xl">
+      <section id="strategic-innovation" className="w-full py-12 px-4 bg-white">
+        <div className="container mx-auto max-w-5xl mb-8">
           <div className="flex justify-center mb-5">
             <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-blue-100">
               <span className="text-sm font-medium text-blue-600">STRATEGIC INNOVATION</span>
@@ -238,47 +234,51 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-3 gap-6 mb-10">
-            <div className="bg-white p-6 border border-gray-200 transition-all duration-300 hover:shadow-lg hover:border-blue-200 hover:translate-y-[-5px]">
-              <div className="bg-blue-600 p-3 rounded w-12 h-12 flex items-center justify-center mb-5">
+            <div className="bg-white rounded-lg overflow-hidden border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md hover:transform hover:scale-105">
+              <div className="bg-blue-600 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-5 mx-4 mt-6">
                 <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
                     strokeWidth={2}
-                    d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2z"
+                    d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 002 2v10a2 2 0 002 2z"
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Strategic AI Implementation</h3>
-              <p className="text-gray-600 mb-5">
-                Leverage AI to solve complex business challenges and unlock new opportunities. Transform bottlenecks
-                into breakthrough moments with data-driven solutions.
-              </p>
-              <Link href="#" className="text-blue-600 hover:text-blue-700 inline-flex items-center group">
-                Learn more{" "}
-                <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
+              <div className="p-5">
+                <h3 className="text-xl font-semibold mb-3 text-gray-800">Strategic AI Implementation</h3>
+                <p className="text-gray-600 mb-5">
+                  Leverage AI to solve complex business challenges and unlock new opportunities. Transform bottlenecks
+                  into breakthrough moments with data-driven solutions.
+                </p>
+                <Link href="#" className="text-blue-600 hover:text-blue-700 inline-flex items-center group">
+                  Learn more{" "}
+                  <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+              </div>
             </div>
 
-            <div className="bg-white p-6 border border-gray-200 transition-all duration-300 hover:shadow-lg hover:border-purple-200 hover:translate-y-[-5px]">
-              <div className="bg-purple-600 p-3 rounded w-12 h-12 flex items-center justify-center mb-5">
+            <div className="bg-white rounded-lg overflow-hidden border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md hover:transform hover:scale-105">
+              <div className="bg-purple-600 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-5 mx-4 mt-6">
                 <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Product Strategy & Innovation</h3>
-              <p className="text-gray-600 mb-5">
-                Drive product success through strategic vision and market insight. Two-time tech entrepreneur with
-                proven track record of launching successful products.
-              </p>
-              <Link href="#" className="text-blue-600 hover:text-blue-700 inline-flex items-center group">
-                Learn more{" "}
-                <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
+              <div className="p-5">
+                <h3 className="text-xl font-semibold mb-3 text-gray-800">Product Strategy & Innovation</h3>
+                <p className="text-gray-600 mb-5">
+                  Drive product success through strategic vision and market insight. Two-time tech entrepreneur with
+                  proven track record of launching successful products.
+                </p>
+                <Link href="#" className="text-blue-600 hover:text-blue-700 inline-flex items-center group">
+                  Learn more{" "}
+                  <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+              </div>
             </div>
 
-            <div className="bg-white p-6 border border-gray-200 transition-all duration-300 hover:shadow-lg hover:border-purple-200 hover:translate-y-[-5px]">
-              <div className="bg-purple-600 p-3 rounded w-12 h-12 flex items-center justify-center mb-5">
+            <div className="bg-white rounded-lg overflow-hidden border border-gray-100 shadow-sm transition-all duration-300 hover:shadow-md hover:transform hover:scale-105">
+              <div className="bg-purple-600 p-3 rounded-full w-12 h-12 flex items-center justify-center mb-5 mx-4 mt-6">
                 <svg className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path
                     strokeLinecap="round"
@@ -288,15 +288,17 @@ export default function Home() {
                   />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-3 text-gray-800">Business Transformation</h3>
-              <p className="text-gray-600 mb-5">
-                Guide organizations through digital transformation with a focus on strategic growth. Blend technology
-                and business strategy for measurable results.
-              </p>
-              <Link href="#" className="text-blue-600 hover:text-blue-700 inline-flex items-center group">
-                Learn more{" "}
-                <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
-              </Link>
+              <div className="p-5">
+                <h3 className="text-xl font-semibold mb-3 text-gray-800">Business Transformation</h3>
+                <p className="text-gray-600 mb-5">
+                  Guide organizations through digital transformation with a focus on strategic growth. Blend technology
+                  and business strategy for measurable results.
+                </p>
+                <Link href="#" className="text-blue-600 hover:text-blue-700 inline-flex items-center group">
+                  Learn more{" "}
+                  <ArrowRight className="ml-1 h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                </Link>
+              </div>
             </div>
           </div>
 
@@ -313,44 +315,51 @@ export default function Home() {
       </section>
 
       {/* Portfolio Section */}
-      <PortfolioSection
-        portfolioItems={portfolioItems}
-        onViewAllClick={() => console.log("View all projects clicked")}
-      />
+      <section id="portfolio">
+        <PortfolioSection
+          portfolioItems={portfolioItems}
+          onViewAllClick={() => console.log("View all projects clicked")}
+        />
+      </section>
 
       {/* Skills Section */}
-      <SkillsSection
-        skillCategories={skillCategories}
-        skillCategoryIcons={{
-          technical: [
-            { name: "Development", icon: "Code" },
-            { name: "Automation", icon: "Zap" },
-            { name: "AI & LLM", icon: "Brain" },
-            { name: "SDLC", icon: "GitMerge" },
-          ],
-          soft: [
-            { name: "Leadership", icon: "Briefcase" },
-            { name: "Problem Solving", icon: "Brain" },
-            { name: "Communication", icon: "MessageSquare" },
-            { name: "Creativity", icon: "PenTool" },
-          ],
-        }}
-        softSkillCategoryIcons={{
-          soft: [
-            { name: "Leadership", icon: "Briefcase" },
-            { name: "Problem Solving", icon: "Brain" },
-            { name: "Communication", icon: "MessageSquare" },
-            { name: "Creativity", icon: "PenTool" },
-          ],
-        }}
-      />
+      <section id="skills">
+        <SkillsSection
+          skillCategories={skillCategories}
+          skillCategoryIcons={{
+            technical: [
+              { name: "Development", icon: "Code" },
+              { name: "Automation", icon: "Zap" },
+              { name: "AI & LLM", icon: "Brain" },
+              { name: "SDLC", icon: "GitMerge" },
+            ],
+            soft: [
+              { name: "Leadership", icon: "Briefcase" },
+              { name: "Problem Solving", icon: "Brain" },
+              { name: "Communication", icon: "MessageSquare" },
+              { name: "Creativity", icon: "PenTool" },
+            ],
+          }}
+          softSkillCategoryIcons={{
+            soft: [
+              { name: "Leadership", icon: "Briefcase" },
+              { name: "Problem Solving", icon: "Brain" },
+              { name: "Communication", icon: "MessageSquare" },
+              { name: "Creativity", icon: "PenTool" },
+            ],
+          }}
+        />
+      </section>
 
-      {/* Case Studies Section */}
-      <CaseStudiesSection caseStudies={caseStudies} />
+      {/* Case Studies Section - temporarily hidden */}
+      <div style={{ display: "none" }}>
+        <CaseStudiesSection caseStudies={caseStudies} />
+      </div>
 
       {/* Contact Section */}
-      <ContactSection />
+      <section id="contact">
+        <ContactSection />
+      </section>
     </main>
   )
 }
-

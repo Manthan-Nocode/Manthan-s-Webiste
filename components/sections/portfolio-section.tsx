@@ -21,7 +21,7 @@ export default function PortfolioSection({ portfolioItems = [], onViewAllClick }
   const hasPortfolioItems = Array.isArray(portfolioItems) && portfolioItems.length > 0
 
   return (
-    <section id="portfolio" className="w-full py-12 px-4 bg-white">
+    <section id="portfolio" className="w-full py-10 px-4 bg-white">
       <div className="container mx-auto">
         <div className="flex justify-center mb-5">
           <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 shadow-sm">
@@ -96,4 +96,3 @@ export default function PortfolioSection({ portfolioItems = [], onViewAllClick }
     </section>
   )
 }
-

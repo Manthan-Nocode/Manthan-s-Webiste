@@ -4,4 +4,3 @@ Allow: /
 
 # Sitemap location
 Sitemap: https://portfolio.vercel.app/sitemap.xml
-

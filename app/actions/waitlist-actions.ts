@@ -85,4 +85,3 @@ export async function addToWaitlist(formData: FormData) {
     }
   }
 }
-

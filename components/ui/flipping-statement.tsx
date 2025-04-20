@@ -46,4 +46,3 @@ export function FlippingStatement({ statements, interval = 3000, className, text
     </div>
   )
 }
-

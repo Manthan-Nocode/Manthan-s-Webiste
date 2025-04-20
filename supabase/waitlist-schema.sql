@@ -13,4 +13,3 @@ CREATE POLICY "Allow public insert to waitlist" ON waitlist FOR INSERT WITH CHEC
 
 -- Create policy for admin access
 CREATE POLICY "Allow admin full access to waitlist" ON waitlist FOR ALL USING (auth.role() = 'authenticated');
-

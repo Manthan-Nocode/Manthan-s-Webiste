@@ -22,7 +22,7 @@ export function useSupabaseBlogPosts() {
         }
 
         // Transform the data to match our BlogPost type
-        const transformedData: BlogPost[] = data.map((post) => ({
+        const transformedData: BlogPost[] = data.map((post: any) => ({
           id: post.id,
           title: post.title,
           slug: post.slug,
@@ -55,4 +55,3 @@ export function useSupabaseBlogPosts() {
 
   return { posts, loading, error }
 }
-

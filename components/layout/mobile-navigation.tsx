@@ -12,9 +12,10 @@ interface MobileNavigationProps {
     href?: string
   }>
   onContactClick: () => void
+  scrollToSection: (sectionId: string) => void
 }
 
-export default function MobileNavigation({ items, onContactClick }: MobileNavigationProps) {
+export default function MobileNavigation({ items, onContactClick, scrollToSection }: MobileNavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   // Close menu when clicking outside
@@ -45,16 +46,13 @@ export default function MobileNavigation({ items, onContactClick }: MobileNaviga
     }
   }, [isOpen])
 
-  const scrollToSection = (sectionId: string) => {
+  const handleNavigation = (item: { id: string; isLink?: boolean; href?: string }) => {
     setIsOpen(false)
-    const section = document.getElementById(sectionId)
-    if (section) {
-      const navHeight = 80 // Height of the navigation bar
-      const sectionTop = section.getBoundingClientRect().top + window.scrollY
-      window.scrollTo({
-        top: sectionTop - navHeight,
-        behavior: "smooth",
-      })
+
+    if (item.isLink && item.href) {
+      window.location.href = item.href
+    } else {
+      scrollToSection(item.id)
     }
   }
 
@@ -96,7 +94,7 @@ export default function MobileNavigation({ items, onContactClick }: MobileNaviga
               key={item.id}
               variant="ghost"
               className="justify-start text-lg py-6 border-b border-gray-100"
-              onClick={() => (item.isLink ? (window.location.href = item.href!) : scrollToSection(item.id))}
+              onClick={() => handleNavigation(item)}
             >
               {item.label}
             </Button>
@@ -109,7 +107,7 @@ export default function MobileNavigation({ items, onContactClick }: MobileNaviga
               onContactClick()
             }}
           >
-            Contact Me
+            Hire Me
           </Button>
         </nav>
       </div>

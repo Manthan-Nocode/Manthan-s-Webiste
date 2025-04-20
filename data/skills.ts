@@ -98,6 +98,34 @@ export const skillCategories: SkillCategory[] = [
         description: "Working across departments to align technology with business goals is where I excel.",
         color: "purple",
       },
+      {
+        name: "Stakeholder Management",
+        icon: "Users",
+        description:
+          "I excel at identifying, analyzing, and engaging with key stakeholders to ensure project success and alignment with business objectives.",
+        color: "indigo",
+      },
+      {
+        name: "Change Management",
+        icon: "RefreshCw",
+        description:
+          "I guide organizations through transitions with structured approaches that minimize resistance and maximize adoption of new processes.",
+        color: "purple",
+      },
+      {
+        name: "Requirements Analysis",
+        icon: "ClipboardList",
+        description:
+          "I systematically elicit, document, and validate business requirements to ensure solutions address the actual needs of the organization.",
+        color: "blue",
+      },
+      {
+        name: "Business Process Modeling",
+        icon: "GitBranch",
+        description:
+          "I create detailed visual representations of business processes to identify inefficiencies and opportunities for automation and improvement.",
+        color: "green",
+      },
     ],
   },
 ]
@@ -118,4 +146,3 @@ export const softSkillCategoryIcons = [
   { name: "Communication", icon: "MessageSquare" },
   { name: "Creativity", icon: "PenTool" },
 ]
-

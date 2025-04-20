@@ -1,3 +1,5 @@
+"use client"
+
 // Add TypeScript declaration for Google Analytics
 declare global {
   interface Window {
@@ -5,7 +7,6 @@ declare global {
     va?: (...args: any[]) => void
   }
 }
-;("use client")
 
 import { useEffect } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
@@ -41,4 +42,3 @@ export function useAnalytics(eventName?: string) {
 
   return null
 }
-

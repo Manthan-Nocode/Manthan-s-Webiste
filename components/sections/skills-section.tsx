@@ -23,6 +23,169 @@ interface SkillsSectionProps {
 // Add defensive rendering to handle empty or undefined skillCategories
 
 // Update the component to correctly access the array within the object
+
+// Helper function to get badges for a skill based on its name and description
+function getSkillBadges(
+  skill: { name: string; description: string },
+  isSkillType = "technical",
+): { text: string; color: string }[] {
+  const badges: { text: string; color: string }[] = []
+  const name = skill.name.toLowerCase()
+  const description = skill.description.toLowerCase()
+
+  if (isSkillType === "technical") {
+    // Workflow Automation tools
+    if (
+      name.includes("workflow") ||
+      name.includes("automation") ||
+      description.includes("workflow") ||
+      description.includes("automate")
+    ) {
+      badges.push({ text: "Zapier", color: "orange" })
+      badges.push({ text: "Power Automate", color: "blue" })
+      badges.push({ text: "n8n", color: "green" })
+      badges.push({ text: "Make.com", color: "purple" })
+    }
+
+    // API Integration
+    if (name.includes("api") || description.includes("api") || description.includes("connect")) {
+      badges.push({ text: "Postman", color: "orange" })
+      badges.push({ text: "REST APIs", color: "blue" })
+      badges.push({ text: "Webhooks", color: "indigo" })
+    }
+
+    // LLM Integration
+    if (
+      name.includes("llm") ||
+      name.includes("ai") ||
+      description.includes("ai") ||
+      description.includes("intelligence")
+    ) {
+      badges.push({ text: "OpenAI", color: "green" })
+      badges.push({ text: "LangChain", color: "blue" })
+      badges.push({ text: "Hugging Face", color: "yellow" })
+    }
+
+    // No-Code Development
+    if (name.includes("no-code") || description.includes("no-code") || description.includes("without writing code")) {
+      badges.push({ text: "Xano", color: "blue" })
+      badges.push({ text: "V0 by Vercel", color: "blue" }) // Changed from black to blue
+      badges.push({ text: "Bubble", color: "teal" })
+    }
+
+    // Data Management
+    if (name.includes("data") || description.includes("data")) {
+      badges.push({ text: "SQL", color: "blue" })
+      badges.push({ text: "Airtable", color: "green" })
+      badges.push({ text: "Notion", color: "indigo" })
+    }
+
+    // Analytics & Reporting
+    if (
+      name.includes("analytics") ||
+      name.includes("reporting") ||
+      description.includes("dashboard") ||
+      description.includes("insight")
+    ) {
+      badges.push({ text: "Power BI", color: "yellow" })
+      badges.push({ text: "Tableau", color: "blue" })
+      badges.push({ text: "Google Analytics", color: "orange" })
+    }
+
+    // SDLC Implementation
+    if (name.includes("sdlc") || description.includes("software development")) {
+      badges.push({ text: "Jira", color: "blue" })
+      badges.push({ text: "GitHub", color: "purple" })
+      badges.push({ text: "GitLab", color: "orange" })
+    }
+  } else {
+    // Soft Skills badges
+
+    // Problem Solving
+    if (name.includes("problem") || description.includes("problem") || description.includes("solution")) {
+      badges.push({ text: "Design Thinking", color: "blue" })
+      badges.push({ text: "Root Cause Analysis", color: "green" })
+      badges.push({ text: "Critical Thinking", color: "purple" })
+    }
+
+    // Client Communication
+    if (
+      name.includes("communication") ||
+      name.includes("client") ||
+      description.includes("communication") ||
+      description.includes("translat")
+    ) {
+      badges.push({ text: "Client Presentations", color: "indigo" })
+      badges.push({ text: "Technical Writing", color: "blue" })
+      badges.push({ text: "Stakeholder Management", color: "green" })
+    }
+
+    // Project Management
+    if (name.includes("project") || description.includes("project") || description.includes("deliver")) {
+      badges.push({ text: "Agile", color: "blue" })
+      badges.push({ text: "Scrum", color: "green" })
+      badges.push({ text: "Kanban", color: "purple" })
+    }
+
+    // Team Collaboration
+    if (
+      name.includes("team") ||
+      name.includes("collaboration") ||
+      description.includes("team") ||
+      description.includes("across")
+    ) {
+      badges.push({ text: "Cross-functional Teams", color: "blue" })
+      badges.push({ text: "Remote Collaboration", color: "indigo" })
+      badges.push({ text: "Mentoring", color: "green" })
+    }
+
+    // Leadership
+    if (name.includes("leadership") || description.includes("lead")) {
+      badges.push({ text: "Team Leadership", color: "blue" })
+      badges.push({ text: "Strategic Planning", color: "purple" })
+      badges.push({ text: "Change Management", color: "green" })
+    }
+
+    // Creativity
+    if (name.includes("creativity") || description.includes("creative")) {
+      badges.push({ text: "Brainstorming", color: "pink" })
+      badges.push({ text: "Innovation Workshops", color: "purple" })
+      badges.push({ text: "Design Sprints", color: "blue" })
+    }
+
+    // Stakeholder Management
+    if (name.includes("stakeholder") || description.includes("stakeholder")) {
+      badges.push({ text: "Stakeholder Mapping", color: "indigo" })
+      badges.push({ text: "Influence Strategies", color: "blue" })
+      badges.push({ text: "Engagement Planning", color: "purple" })
+    }
+
+    // Change Management
+    if (name.includes("change") || description.includes("change") || description.includes("transition")) {
+      badges.push({ text: "ADKAR Model", color: "blue" })
+      badges.push({ text: "Kotter's 8-Step", color: "purple" })
+      badges.push({ text: "Impact Assessment", color: "green" })
+    }
+
+    // Requirements Analysis
+    if (name.includes("requirements") || description.includes("requirements") || description.includes("elicit")) {
+      badges.push({ text: "User Stories", color: "blue" })
+      badges.push({ text: "BPMN", color: "orange" })
+      badges.push({ text: "Use Cases", color: "green" })
+    }
+
+    // Business Process Modeling
+    if (name.includes("process") || description.includes("process") || description.includes("modeling")) {
+      badges.push({ text: "BPMN 2.0", color: "blue" })
+      badges.push({ text: "UML", color: "purple" })
+      badges.push({ text: "Flowcharting", color: "green" })
+    }
+  }
+
+  // Limit to 3 badges maximum
+  return badges.slice(0, 3)
+}
+
 export default function SkillsSection({
   skillCategories = [],
   skillCategoryIcons,
@@ -60,7 +223,7 @@ export default function SkillsSection({
   const hasSkillCategories = Array.isArray(skillCategories) && skillCategories.length > 0
 
   return (
-    <section id="skills" className="w-full py-12 px-4 bg-gray-50">
+    <section id="skills" className="w-full py-10 px-4 bg-gray-50">
       <div className="container mx-auto">
         <div className="flex justify-center mb-5">
           <div className="inline-flex items-center justify-center px-4 py-1.5 rounded-full bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100 shadow-sm">
@@ -150,6 +313,18 @@ export default function SkillsSection({
                   </div>
                 </div>
                 <p className="text-gray-600">{skill.description}</p>
+
+                {/* Add badges here */}
+                <div className="flex flex-wrap gap-2 mt-3">
+                  {getSkillBadges(skill, activeTab).map((badge, badgeIndex) => (
+                    <span
+                      key={badgeIndex}
+                      className={`text-xs px-2 py-1 rounded-full bg-${badge.color}-100 text-${badge.color}-600`}
+                    >
+                      {badge.text}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           ))}

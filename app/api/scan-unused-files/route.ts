@@ -13,4 +13,3 @@ export async function GET() {
     return NextResponse.json({ error: "Failed to scan for unused files" }, { status: 500 })
   }
 }
-

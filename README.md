@@ -33,4 +33,3 @@ If you encounter build errors:
 2. Copy `.env.example` to `.env.local` and fill in your Supabase credentials
 3. Run `npm install` to install dependencies
 4. Run `npm run dev` to start the development server
-

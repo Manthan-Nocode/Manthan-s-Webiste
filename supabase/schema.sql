@@ -49,4 +49,3 @@ CREATE POLICY "Allow public insert to contact_submissions" ON contact_submission
 -- Create policies for admin access
 CREATE POLICY "Allow admin full access to blog_posts" ON blog_posts FOR ALL USING (auth.role() = 'authenticated');
 CREATE POLICY "Allow admin full access to contact_submissions" ON contact_submissions FOR ALL USING (auth.role() = 'authenticated');
-

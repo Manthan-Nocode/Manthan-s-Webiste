@@ -39,4 +39,3 @@ export const portfolioItems: PortfolioItem[] = [
     url: "#",
   },
 ]
-

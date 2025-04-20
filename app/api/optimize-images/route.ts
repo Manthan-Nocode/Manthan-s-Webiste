@@ -19,4 +19,3 @@ export async function GET() {
     return NextResponse.json({ error: "Failed to optimize images" }, { status: 500 })
   }
 }
-

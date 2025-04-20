@@ -22,7 +22,7 @@ export function useSupabasePortfolioItems() {
         }
 
         // Transform the data to match our PortfolioItem type
-        const transformedData: PortfolioItem[] = data.map((item) => ({
+        const transformedData: PortfolioItem[] = data.map((item: any) => ({
           id: item.id,
           title: item.title,
           description: item.description,
@@ -47,4 +47,3 @@ export function useSupabasePortfolioItems() {
 
   return { items, loading, error }
 }
-

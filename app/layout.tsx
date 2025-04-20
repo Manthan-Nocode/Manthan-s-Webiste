@@ -45,6 +45,7 @@ export const metadata = {
   alternates: {
     canonical: "/",
   },
+    generator: 'v0.dev'
 }
 
 // Wrap the children with ErrorBoundary in the RootLayout component
@@ -67,4 +68,3 @@ export default function RootLayout({
     </html>
   )
 }
-

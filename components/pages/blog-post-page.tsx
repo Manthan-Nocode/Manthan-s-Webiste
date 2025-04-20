@@ -587,4 +587,3 @@ export default function BlogPostPage({ slug }: { slug: string }) {
     </main>
   )
 }
-

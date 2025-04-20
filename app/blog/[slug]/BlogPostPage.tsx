@@ -442,4 +442,3 @@ function BlogPostPage({ slug }: { slug: string }) {
 }
 
 export default BlogPostPage
-

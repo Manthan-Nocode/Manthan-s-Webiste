@@ -61,4 +61,3 @@ export const colorMap = {
     hover: "hover:bg-green-600",
   },
 }
-

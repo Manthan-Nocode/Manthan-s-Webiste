@@ -7,4 +7,3 @@ export default function LearnPageClient() {
 LearnPageClient.LearnPageContent = () => {
   return <div>Learn Page Content</div>
 }
-
