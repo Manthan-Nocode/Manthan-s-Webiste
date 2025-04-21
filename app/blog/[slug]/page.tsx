@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-// Update the type definition for params
+// For generateMetadata, we'll keep the typing as it is
 export async function generateMetadata({ 
   params 
 }: { 
@@ -15,14 +15,16 @@ export async function generateMetadata({
   }
 }
 
-// Update the component to use the correct PageProps type from Next.js
-import { PageProps } from 'next'
+// For the page component, we'll use a different approach
+interface BlogPageParams {
+  slug: string;
+}
 
-export default async function Page({ 
-  params 
-}: PageProps) {
-  // Safely access the slug from params
-  const slug = params?.slug as string
+export default async function Page(props: {
+  params: BlogPageParams;
+  searchParams?: Record<string, string | string[]>;
+}) {
+  const { slug } = props.params;
   
   return (
     <div className="container mx-auto px-4 py-8">
