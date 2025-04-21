@@ -5,8 +5,12 @@ import SemanticBlogLayout from "@/components/blog/semantic-blog-layout"
 import FAQStructuredData from "@/components/seo/faq-structured-data"
 import type { BlogPost } from "@/types"
 
-// Generate metadata for SEO
-export async function generateMetadata({ params }: { params: { slug: string } }): Promise<Metadata> {
+// Fix the TypeScript error by properly typing the params parameter
+export async function generateMetadata({
+  params,
+}: {
+  params: { slug: string }
+}): Promise<Metadata> {
   // Fetch blog post data
   const { data: post, error } = await supabase.from("blog_posts").select("*").eq("slug", params.slug).single()
 

@@ -1,11 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  swcMinify: true, // Use SWC minifier for better performance
+  // swcMinify is now default in Next.js 15, so removed
   images: {
     domains: ['images.unsplash.com', 'via.placeholder.com'],
-    formats: ['image/avif', 'image/webp'], // Modern image formats
-    // Restrict to specific trusted domains instead of allowing any HTTPS source
+    formats: ['image/avif', 'image/webp'],
     remotePatterns: [
       {
         protocol: 'https',
@@ -15,10 +14,9 @@ const nextConfig = {
         protocol: 'https',
         hostname: 'via.placeholder.com',
       },
-      // Add other trusted domains as needed
     ],
   },
-  // Add security headers (these will be applied in addition to middleware)
+  // Add security headers
   async headers() {
     return [
       {
@@ -89,7 +87,7 @@ const nextConfig = {
     
     return config;
   },
-  // Remove error suppression to catch potential security issues
+  // Keep error checking enabled
   eslint: {
     ignoreDuringBuilds: false,
   },
@@ -102,9 +100,9 @@ const nextConfig = {
       exclude: ['error', 'warn'],
     } : false,
   },
+  // Updated experimental section (removed legacyBrowsers)
   experimental: {
-    legacyBrowsers: false,
-    esmExternals: 'loose'
+    esmExternals: true
   }
 }
 
