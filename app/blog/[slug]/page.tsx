@@ -1,12 +1,9 @@
-// app/blog/[slug]/page.tsx
-import type { Metadata } from 'next'
+import { Metadata } from 'next'
 
 // For metadata generation
-export async function generateMetadata({ 
-  params 
-}: any): Promise<Metadata> {
-  // Handle both Promise and non-Promise cases
-  const slug = params?.slug || (await params)?.slug;
+export async function generateMetadata(props: any): Promise<Metadata> {
+  const params = await props.params;
+  const slug = params?.slug || '';
   
   return {
     title: `Blog Post: ${slug} | Manthan Tiwari`,
@@ -14,12 +11,10 @@ export async function generateMetadata({
   }
 }
 
-// For the page component - use any to bypass the strict type checking
-export default async function Page({ 
-  params 
-}: any) {
-  // Handle both Promise and non-Promise cases safely
-  const slug = params?.slug || (await params)?.slug;
+// For the page component
+export default async function Page(props: any) {
+  const params = await props.params;
+  const slug = params?.slug || '';
   
   return (
     <div className="container mx-auto px-4 py-8">
