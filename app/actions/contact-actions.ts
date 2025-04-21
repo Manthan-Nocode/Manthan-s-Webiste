@@ -1,5 +1,4 @@
 "use server"
-
 import { z } from "zod"
 import { createServerSupabaseClient } from "@/lib/supabase-client"
 import { cookies } from "next/headers"
@@ -16,13 +15,12 @@ const ContactSchema = z.object({
 
 export async function submitContactForm(formData: FormData) {
   // Rate limiting check
-  const cookieStore = cookies()
+  const cookieStore = await cookies()
   const lastSubmission = cookieStore.get("last_contact_submission")
 
   if (lastSubmission) {
     const lastTime = Number.parseInt(lastSubmission.value)
     const now = Date.now()
-
     // Limit to one submission per minute
     if (now - lastTime < 60000) {
       return {
@@ -44,10 +42,10 @@ export async function submitContactForm(formData: FormData) {
 
     // Validate the data
     const validatedData = ContactSchema.parse(rawData)
-
+    
     // Sanitize the message to prevent XSS
     const sanitizedMessage = sanitizeHtml(validatedData.message)
-
+    
     // Submit to Supabase using server client
     const supabase = createServerSupabaseClient()
     const { error } = await supabase.from("contact_submissions").insert([
@@ -69,8 +67,8 @@ export async function submitContactForm(formData: FormData) {
       }
     }
 
-    // Set rate limiting cookie
-    cookieStore.set("last_contact_submission", Date.now().toString(), {
+    // Set rate limiting cookie - the cookies API changes mean this needs await as well
+    await cookieStore.set("last_contact_submission", Date.now().toString(), {
       maxAge: 60, // 1 minute
       path: "/",
       httpOnly: true,
@@ -84,7 +82,6 @@ export async function submitContactForm(formData: FormData) {
     }
   } catch (error) {
     console.error("Error in submitContactForm:", error)
-
     if (error instanceof z.ZodError) {
       // Return validation errors
       return {
@@ -92,7 +89,6 @@ export async function submitContactForm(formData: FormData) {
         message: error.errors[0].message,
       }
     }
-
     return {
       success: false,
       message: "An unexpected error occurred. Please try again.",
