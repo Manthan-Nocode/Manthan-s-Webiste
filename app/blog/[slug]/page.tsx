@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-// For generateMetadata, we'll keep the typing as it is
+// For generateMetadata
 export async function generateMetadata({ 
   params 
 }: { 
@@ -15,16 +15,9 @@ export async function generateMetadata({
   }
 }
 
-// For the page component, we'll use a different approach
-interface BlogPageParams {
-  slug: string;
-}
-
-export default async function Page(props: {
-  params: BlogPageParams;
-  searchParams?: Record<string, string | string[]>;
-}) {
-  const { slug } = props.params;
+// Simplified version without explicit typing
+export default async function Page(props: any) {
+  const slug = props.params?.slug;
   
   return (
     <div className="container mx-auto px-4 py-8">
