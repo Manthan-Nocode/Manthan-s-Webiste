@@ -6,10 +6,10 @@ import FAQStructuredData from "@/components/seo/faq-structured-data"
 import type { BlogPost } from "@/types"
 
 // Fix the TypeScript error by properly typing the params parameter
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string }
+export async function generateMetadata({ 
+  params 
+}: { 
+  params: { slug: string } 
 }): Promise<Metadata> {
   // Fetch blog post data
   const { data: post, error } = await supabase.from("blog_posts").select("*").eq("slug", params.slug).single()
