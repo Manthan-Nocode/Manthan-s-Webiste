@@ -1,7 +1,5 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { getBlogPostBySlug } from '@/lib/api' // Update this import to match your actual API function
-import BlogPostPage from '@/components/blog-post-page' // Update this to match your actual component
 
 // This is the correct type annotation for the generateMetadata function
 export async function generateMetadata({ 
@@ -9,29 +7,13 @@ export async function generateMetadata({
 }: { 
   params: { slug: string } 
 }): Promise<Metadata> {
-  // Get blog post data
-  const post = await getBlogPostBySlug(params.slug)
+  // Get the slug from params
+  const { slug } = params
   
-  // If the post doesn't exist, return a basic metadata object
-  if (!post) {
-    return {
-      title: 'Post Not Found',
-      description: 'The requested blog post could not be found.',
-    }
-  }
-  
-  // Return metadata for the post
+  // Return basic metadata (you can enhance this later)
   return {
-    title: `${post.title} | AI & Automation Expert`,
-    description: post.excerpt,
-    keywords: post.tags.join(', '),
-    authors: [{ name: post.author }],
-    openGraph: {
-      title: `${post.title} | AI & Automation Expert`,
-      description: post.excerpt,
-      images: [`${process.env.NEXT_PUBLIC_SITE_URL || ''}${post.image}`],
-      type: 'article',
-    },
+    title: `Blog Post: ${slug} | Manthan Tiwari`,
+    description: "Blog post description will go here",
   }
 }
 
@@ -44,15 +26,16 @@ export default async function Page({
   // Get the slug from params
   const { slug } = params
   
-  // This is an async server component, so we can fetch data
-  try {
-    // Replace with your actual data fetching logic
-    // const post = await getBlogPostBySlug(slug)
-    
-    // For now, just pass the slug to the client component
-    return <BlogPostPage slug={slug} />
-  } catch (error) {
-    console.error('Error fetching blog post:', error)
-    return notFound()
-  }
+  // Simple placeholder implementation
+  return (
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold">Blog Post: {slug}</h1>
+      <p className="mt-4">
+        This is a placeholder for blog post with slug: {slug}
+      </p>
+      <p className="mt-4">
+        You can replace this with your actual blog post component later.
+      </p>
+    </div>
+  )
 }
