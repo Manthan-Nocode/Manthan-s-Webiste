@@ -19,11 +19,9 @@ interface AnalyticsEvent<T extends EventCategory> {
 }
 
 // Add type definition for window.gtag
-declare global {
-  interface Window {
-    dataLayer: any[]
-    gtag: (...args: any[]) => void
-  }
+interface WindowWithGtag extends Window {
+  dataLayer?: any[];
+  gtag?: (...args: any[]) => void;
 }
 
 /**
