@@ -54,7 +54,7 @@ export async function addToWaitlist(formData: FormData) {
         }
       }
 
-      console.error("Error with waitlist operation:", error)
+      console.error("Error with waitlist operation")
       return {
         success: false,
         message: "Error processing your request. Please try again.",
@@ -72,7 +72,7 @@ export async function addToWaitlist(formData: FormData) {
       message: "Thank you for joining our waitlist! We'll notify you when we launch.",
     }
   } catch (error) {
-    console.error("Error in addToWaitlist:", error)
+    console.error("Error in addToWaitlist")
     if (error instanceof z.ZodError) {
       return {
         success: false,

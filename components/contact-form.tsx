@@ -61,7 +61,7 @@ export default function ContactForm() {
         message: "",
       })
     } catch (err) {
-      console.error("Error submitting contact form:", err)
+      console.error("Error submitting contact form")
       toast.error("There was an error submitting your message. Please try again.")
     } finally {
       setLoading(false)

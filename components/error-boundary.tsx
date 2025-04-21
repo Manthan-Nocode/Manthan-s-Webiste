@@ -33,8 +33,8 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
-    // Log the error to an error reporting service
-    console.error("Uncaught error:", error, errorInfo)
+    // Log the error without exposing sensitive details
+    console.error("Uncaught error in component")
 
     // Call the onError callback if provided
     if (this.props.onError) {
@@ -42,7 +42,11 @@ class ErrorBoundary extends Component<Props, State> {
     }
 
     // Update state with error info for potential display
-    this.setState({ errorInfo })
+    // But sanitize the error message to avoid leaking sensitive information
+    this.setState({
+      errorInfo,
+      error: new Error("An error occurred in this component"),
+    })
   }
 
   public render(): ReactNode {
@@ -56,7 +60,9 @@ class ErrorBoundary extends Component<Props, State> {
             {this.state.error && (
               <div className="mb-6 p-4 bg-red-50 text-red-700 rounded-md max-w-md overflow-auto text-left">
                 <p className="font-semibold">Error:</p>
-                <p className="text-sm">{this.state.error.toString()}</p>
+                <p className="text-sm">
+                  An error occurred in this component. Please try again or contact support if the issue persists.
+                </p>
               </div>
             )}
             <Button

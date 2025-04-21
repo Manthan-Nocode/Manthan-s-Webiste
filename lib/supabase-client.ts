@@ -1,58 +1,58 @@
 import { createClient } from "@supabase/supabase-js"
 import type { Database } from "@/types/supabase"
 
-/**
- * Creates and returns a Supabase client instance
- * Uses environment variables for configuration
- * @returns Supabase client instance
- */
-export function getSupabaseClient() {
-  // Check if we already have an instance to avoid creating multiple clients
-  if (typeof window !== "undefined" && (window as any).__supabaseClient) {
-    return (window as any).__supabaseClient
-  }
-
+// Environment variables are only accessible server-side
+// This is a safe pattern for creating the Supabase client
+const createSupabaseClient = () => {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!supabaseUrl || !supabaseAnonKey) {
     console.error("Missing Supabase environment variables. Please check your .env file.")
 
-    // Create a mock client that logs errors instead of throwing them
-    const mockClient = {
+    // Return a mock client that doesn't expose error details to the client
+    return {
       from: () => ({
         select: () => ({
           eq: () => ({
-            single: async () => ({ data: null, error: new Error("Supabase configuration missing") }),
+            single: async () => ({ data: null, error: new Error("Configuration error") }),
           }),
           neq: () => ({
             order: () => ({
-              limit: async () => ({ data: [], error: new Error("Supabase configuration missing") }),
+              limit: async () => ({ data: [], error: new Error("Configuration error") }),
             }),
           }),
-          order: async () => ({ data: [], error: new Error("Supabase configuration missing") }),
+          order: async () => ({ data: [], error: new Error("Configuration error") }),
         }),
-        insert: async () => ({ error: new Error("Supabase configuration missing") }),
-        upsert: async () => ({ error: new Error("Supabase configuration missing") }),
+        insert: async () => ({ error: new Error("Configuration error") }),
+        upsert: async () => ({ error: new Error("Configuration error") }),
       }),
-    }
-
-    return mockClient as any
+    } as any
   }
 
-  const client = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+  return createClient<Database>(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: true,
       autoRefreshToken: true,
     },
   })
+}
 
-  // Store the client instance for reuse if in browser environment
-  if (typeof window !== "undefined") {
-    ;(window as any).__supabaseClient = client
+// Create a singleton instance for the browser
+let supabaseInstance: ReturnType<typeof createSupabaseClient> | null = null
+
+export function getSupabaseClient() {
+  if (typeof window === "undefined") {
+    // Server-side: Always create a new instance
+    return createSupabaseClient()
   }
 
-  return client
+  // Client-side: Reuse the instance
+  if (!supabaseInstance) {
+    supabaseInstance = createSupabaseClient()
+  }
+
+  return supabaseInstance
 }
 
 // Export a singleton instance of the Supabase client

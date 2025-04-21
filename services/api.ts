@@ -16,7 +16,7 @@ export const api = {
       const { data, error } = await supabase.from("blog_posts").select("*").order("date", { ascending: false })
 
       if (error) {
-        console.error("Error fetching blog posts from Supabase:", error)
+        console.error("Error fetching blog posts from Supabase")
         return []
       }
 
@@ -67,7 +67,7 @@ export const api = {
       const { data, error } = await supabase.from("blog_posts").select("*").eq("slug", slug).single()
 
       if (error) {
-        console.error(`Error fetching blog post with slug ${slug}:`, error)
+        console.error(`Error fetching blog post with slug ${slug}`)
         return null
       }
 
@@ -120,7 +120,7 @@ export const api = {
         .limit(limit + 5) // Fetch extra to filter by tags
 
       if (error) {
-        console.error("Error fetching related blog posts:", error)
+        console.error("Error fetching related blog posts")
         return []
       }
 
@@ -173,7 +173,7 @@ export const api = {
       const { data, error } = await supabase.from("portfolio_items").select("*").order("year", { ascending: false })
 
       if (error) {
-        console.error("Error fetching portfolio items:", error)
+        console.error("Error fetching portfolio items")
         return portfolioItems // Fallback to mock data
       }
 
@@ -209,7 +209,7 @@ export const api = {
       const { data: caseStudiesData, error: caseStudiesError } = await supabase.from("case_studies").select("*")
 
       if (caseStudiesError) {
-        console.error("Error fetching case studies:", caseStudiesError)
+        console.error("Error fetching case studies")
         return caseStudies // Fallback to mock data
       }
 
@@ -221,7 +221,7 @@ export const api = {
       const { data: resultsData, error: resultsError } = await supabase.from("case_study_results").select("*")
 
       if (resultsError) {
-        console.error("Error fetching case study results:", resultsError)
+        console.error("Error fetching case study results")
         return caseStudies // Fallback to mock data
       }
 
@@ -272,7 +272,7 @@ export const api = {
       const { data: study, error: studyError } = await supabase.from("case_studies").select("*").eq("id", id).single()
 
       if (studyError) {
-        console.error(`Error fetching case study with id ${id}:`, studyError)
+        console.error(`Error fetching case study with id ${id}`)
         return caseStudies.find((study) => study.id === id) || null // Fallback to mock data
       }
 
@@ -287,7 +287,7 @@ export const api = {
         .eq("case_study_id", id)
 
       if (resultsError) {
-        console.error(`Error fetching results for case study with id ${id}:`, resultsError)
+        console.error(`Error fetching results for case study with id ${id}`)
         return caseStudies.find((s) => s.id === id) || null // Fallback to mock data
       }
 
@@ -327,7 +327,7 @@ export const api = {
       const { data: categoriesData, error: categoriesError } = await supabase.from("skill_categories").select("*")
 
       if (categoriesError) {
-        console.error("Error fetching skill categories:", categoriesError)
+        console.error("Error fetching skill categories")
         return skillCategories // Fallback to mock data
       }
 
@@ -339,7 +339,7 @@ export const api = {
       const { data: skillsData, error: skillsError } = await supabase.from("skills").select("*")
 
       if (skillsError) {
-        console.error("Error fetching skills:", skillsError)
+        console.error("Error fetching skills")
         return skillCategories // Fallback to mock data
       }
 
@@ -397,7 +397,7 @@ export const api = {
       ])
 
       if (error) {
-        console.error("Error submitting contact form:", error)
+        console.error("Error submitting contact form")
         return {
           success: false,
           message: "There was an error submitting your message. Please try again.",
@@ -439,7 +439,7 @@ export const api = {
         .eq("email", email)
 
       if (checkError) {
-        console.error("Error checking waitlist for existing email:", checkError)
+        console.error("Error checking waitlist for existing email")
         return {
           success: false,
           message: "There was an error joining the waitlist. Please try again.",
@@ -459,7 +459,7 @@ export const api = {
       const { error: insertError } = await supabase.from("waitlist").insert([{ email }])
 
       if (insertError) {
-        console.error("Error adding email to waitlist:", insertError)
+        console.error("Error adding email to waitlist")
         return {
           success: false,
           message: "There was an error joining the waitlist. Please try again.",
