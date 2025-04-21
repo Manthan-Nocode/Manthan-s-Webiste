@@ -1,32 +1,29 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-// This is the correct type annotation for the generateMetadata function
+// Update the type definition for params
 export async function generateMetadata({ 
   params 
 }: { 
   params: { slug: string } 
 }): Promise<Metadata> {
-  // Get the slug from params
   const { slug } = params
   
-  // Return basic metadata (you can enhance this later)
   return {
     title: `Blog Post: ${slug} | Manthan Tiwari`,
     description: "Blog post description will go here",
   }
 }
 
-// The page component must also have proper type annotations
+// Update the component to use the correct PageProps type from Next.js
+import { PageProps } from 'next'
+
 export default async function Page({ 
   params 
-}: { 
-  params: { slug: string } 
-}) {
-  // Get the slug from params
-  const { slug } = params
+}: PageProps) {
+  // Safely access the slug from params
+  const slug = params?.slug as string
   
-  // Simple placeholder implementation
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-3xl font-bold">Blog Post: {slug}</h1>
