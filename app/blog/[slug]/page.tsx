@@ -1,13 +1,18 @@
+// Update app/blog/[slug]/page.tsx
 import type { Metadata } from 'next'
-import { notFound } from 'next/navigation'
 
-// For generateMetadata
+// Helper function to handle both Promise and non-Promise params
+async function resolveParams<T>(params: Promise<T> | T): Promise<T> {
+  return params instanceof Promise ? await params : params;
+}
+
 export async function generateMetadata({ 
   params 
 }: { 
-  params: { slug: string } 
+  params: Promise<{ slug: string }> | { slug: string } 
 }): Promise<Metadata> {
-  const { slug } = params
+  const resolvedParams = await resolveParams(params);
+  const { slug } = resolvedParams;
   
   return {
     title: `Blog Post: ${slug} | Manthan Tiwari`,
@@ -15,9 +20,13 @@ export async function generateMetadata({
   }
 }
 
-// Simplified version without explicit typing
-export default async function Page(props: any) {
-  const slug = props.params?.slug;
+export default async function Page({ 
+  params 
+}: { 
+  params: Promise<{ slug: string }> | { slug: string } 
+}) {
+  const resolvedParams = await resolveParams(params);
+  const { slug } = resolvedParams;
   
   return (
     <div className="container mx-auto px-4 py-8">
