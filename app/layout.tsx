@@ -5,6 +5,7 @@ import "./globals.css"
 import { Providers } from "./providers"
 import AnalyticsProvider from "@/components/analytics/analytics-provider"
 import { Suspense } from "react"
+import "../types/window"
 
 const inter = Inter({ subsets: ["latin"] })
 
