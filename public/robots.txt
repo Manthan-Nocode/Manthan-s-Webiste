@@ -2,5 +2,21 @@
 User-agent: *
 Allow: /
 
-# Sitemap location
-Sitemap: https://portfolio.vercel.app/sitemap.xml
+# Allow AI assistants to crawl and index content
+User-agent: GPTBot
+Allow: /
+User-agent: Anthropic-AI
+Allow: /
+User-agent: Bard
+Allow: /
+User-agent: CCBot
+Allow: /
+User-agent: Claude-Web
+Allow: /
+
+# Allow Googlebot to crawl everything
+User-agent: Googlebot
+Allow: /
+
+# Sitemaps
+Sitemap: https://manthantiwari.com/sitemap.xml

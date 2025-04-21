@@ -4,6 +4,7 @@ import { useEffect } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowLeft, RefreshCw } from "lucide-react"
+import { logSecurityEvent } from "@/lib/security-utils"
 
 export default function Error({
   error,
@@ -13,8 +14,12 @@ export default function Error({
   reset: () => void
 }) {
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error("Application error:", error)
+    // Log the error without exposing sensitive details
+    logSecurityEvent("client_error", {
+      errorName: error.name,
+      errorDigest: error.digest,
+      // Don't log error.message or error.stack as they may contain sensitive info
+    })
   }, [error])
 
   return (

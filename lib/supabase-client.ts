@@ -1,33 +1,20 @@
 import { createClient } from "@supabase/supabase-js"
 import type { Database } from "@/types/supabase"
 
-// Environment variables are only accessible server-side
-// This is a safe pattern for creating the Supabase client
-const createSupabaseClient = () => {
+// Create a singleton instance for the browser
+let supabaseInstance: ReturnType<typeof createBrowserSupabaseClient> | null = null
+
+/**
+ * Creates a Supabase client for browser usage with anon key
+ * This client respects RLS policies and is safe for client-side use
+ */
+export function createBrowserSupabaseClient() {
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
   if (!supabaseUrl || !supabaseAnonKey) {
     console.error("Missing Supabase environment variables. Please check your .env file.")
-
-    // Return a mock client that doesn't expose error details to the client
-    return {
-      from: () => ({
-        select: () => ({
-          eq: () => ({
-            single: async () => ({ data: null, error: new Error("Configuration error") }),
-          }),
-          neq: () => ({
-            order: () => ({
-              limit: async () => ({ data: [], error: new Error("Configuration error") }),
-            }),
-          }),
-          order: async () => ({ data: [], error: new Error("Configuration error") }),
-        }),
-        insert: async () => ({ error: new Error("Configuration error") }),
-        upsert: async () => ({ error: new Error("Configuration error") }),
-      }),
-    } as any
+    throw new Error("Supabase configuration error")
   }
 
   return createClient<Database>(supabaseUrl, supabaseAnonKey, {
@@ -38,22 +25,52 @@ const createSupabaseClient = () => {
   })
 }
 
-// Create a singleton instance for the browser
-let supabaseInstance: ReturnType<typeof createSupabaseClient> | null = null
+/**
+ * Creates a Supabase client for server-side usage
+ * This should ONLY be used in server components, API routes, or server actions
+ * NEVER expose this client to the browser
+ */
+export function createServerSupabaseClient() {
+  // Ensure this code only runs on the server
+  if (typeof window !== "undefined") {
+    throw new Error("Server Supabase client cannot be used in browser context")
+  }
 
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY
+
+  if (!supabaseUrl || !supabaseServiceKey) {
+    throw new Error("Missing Supabase environment variables")
+  }
+
+  return createClient<Database>(supabaseUrl, supabaseServiceKey, {
+    auth: {
+      persistSession: false,
+    },
+  })
+}
+
+/**
+ * Returns a browser Supabase client
+ * Safe for client-side usage
+ */
 export function getSupabaseClient() {
   if (typeof window === "undefined") {
-    // Server-side: Always create a new instance
-    return createSupabaseClient()
+    // Server-side: Create a new client with anon key (NOT service key)
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ""
+    const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || ""
+    return createClient<Database>(supabaseUrl, supabaseAnonKey, {
+      auth: { persistSession: false },
+    })
   }
 
   // Client-side: Reuse the instance
   if (!supabaseInstance) {
-    supabaseInstance = createSupabaseClient()
+    supabaseInstance = createBrowserSupabaseClient()
   }
 
   return supabaseInstance
 }
 
-// Export a singleton instance of the Supabase client
+// Export a singleton instance of the Supabase client for browser usage
 export const supabase = getSupabaseClient()

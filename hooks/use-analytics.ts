@@ -1,44 +1,59 @@
 "use client"
 
-// Add TypeScript declaration for Google Analytics
-declare global {
-  interface Window {
-    gtag?: (...args: any[]) => void
-    va?: (...args: any[]) => void
-  }
-}
-
-import { useEffect } from "react"
+import { useEffect, useCallback } from "react"
 import { usePathname, useSearchParams } from "next/navigation"
+import { trackPageView, trackContentEngagement, trackNavigation } from "@/lib/analytics"
 
-export function useAnalytics(eventName?: string) {
+export function useAnalytics() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
   // Track page views
   useEffect(() => {
     if (pathname) {
-      // Track page view in Google Analytics
-      window.gtag?.("event", "page_view", {
-        page_path: pathname,
-        page_search: searchParams?.toString(),
-        page_title: document.title,
-      })
+      // Get page title
+      const pageTitle = document.title
 
-      // Track page view in Vercel Analytics
-      window.va?.("page_view", {
-        path: pathname,
-        search: searchParams?.toString(),
-        title: document.title,
-      })
+      // Construct full URL
+      const url = pathname + (searchParams?.toString() ? `?${searchParams.toString()}` : "")
 
-      // Track custom event if provided
-      if (eventName) {
-        window.gtag?.("event", eventName)
-        window.va?.("event", { name: eventName })
-      }
+      // Track page view
+      trackPageView(url, pageTitle)
     }
-  }, [pathname, searchParams, eventName])
+  }, [pathname, searchParams])
 
-  return null
+  // Track content engagement
+  const trackEngagement = useCallback(
+    (
+      contentId: string,
+      contentType: "blog" | "case_study" | "video" | "tutorial",
+      action: "like" | "bookmark" | "share" | "comment" | "subscribe",
+      value?: number,
+    ) => {
+      trackContentEngagement({
+        contentId,
+        contentType,
+        action,
+        value,
+      })
+    },
+    [],
+  )
+
+  // Track navigation
+  const trackNav = useCallback(
+    (action: "click" | "scroll" | "tab_change" | "menu_open", destination: string) => {
+      trackNavigation({
+        action,
+        destination,
+        source: pathname || "/",
+      })
+    },
+    [pathname],
+  )
+
+  return {
+    trackEngagement,
+    trackNav,
+  }
 }

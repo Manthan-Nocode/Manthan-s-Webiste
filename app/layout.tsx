@@ -1,14 +1,15 @@
 import type React from "react"
+import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { Providers } from "./providers"
-// Import the ErrorBoundary at the top of the file
-import ErrorBoundary from "@/components/error-boundary"
+import AnalyticsProvider from "@/components/analytics/analytics-provider"
+import { Suspense } from "react"
 
 const inter = Inter({ subsets: ["latin"] })
 
 // Add comprehensive metadata for SEO
-export const metadata = {
+export const metadata: Metadata = {
   title: "Manthan Tiwari | AI Business Consultant",
   description:
     "Data-driven and strategic AI Business Consultant with over 6 years of experience in financial and technology environments.",
@@ -48,7 +49,6 @@ export const metadata = {
     generator: 'v0.dev'
 }
 
-// Wrap the children with ErrorBoundary in the RootLayout component
 export default function RootLayout({
   children,
 }: {
@@ -57,12 +57,24 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Proper viewport meta tag for responsive design */}
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, minimum-scale=1.0" />
+
+        {/* AI-specific metadata to improve LLM understanding */}
+        <meta name="ai-content-type" content="business-automation-consulting" />
+        <meta name="ai-expertise" content="AI implementation, workflow automation, business process optimization" />
+        <meta
+          name="ai-topics"
+          content="artificial intelligence, business automation, workflow optimization, no-code solutions"
+        />
+        <meta name="ai-audience" content="business owners, managers, process improvement specialists" />
+        <meta name="ai-difficulty" content="intermediate" />
+        <meta name="ai-source-type" content="expert-authored" />
       </head>
       <body className={inter.className}>
         <Providers>
-          <ErrorBoundary>{children}</ErrorBoundary>
+          <Suspense>
+            <AnalyticsProvider>{children}</AnalyticsProvider>
+          </Suspense>
         </Providers>
       </body>
     </html>
