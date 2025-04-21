@@ -66,6 +66,9 @@ export function trackPageView(url: string, title: string) {
 /**
  * Track content engagement
  */
+/**
+ * Track content engagement with expanded action types
+ */
 export function trackContentEngagement({
   contentId,
   contentType,
@@ -74,12 +77,18 @@ export function trackContentEngagement({
 }: {
   contentId: string
   contentType: "blog" | "case_study" | "video" | "tutorial"
-  action: EventActions["engagement"]
+  action: EventActions["engagement"] | EventActions["content"]
   value?: number
 }) {
+  // Determine the appropriate category based on the action
+  const category: EventCategory = 
+    (action === "view" || action === "read" || action === "download" || action === "complete") 
+      ? "content" 
+      : "engagement";
+  
   trackEvent({
-    category: "engagement",
-    action,
+    category,
+    action: action as any, // Type assertion needed due to TypeScript's limitations with discriminated unions
     label: contentType,
     value,
     content_id: contentId,
